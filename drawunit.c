@@ -477,18 +477,35 @@ void drawfightteam(struct unit* abc, float x, float y, int enemyT)
 		Drawunit(abc[i], vx, vy);
 	}
 
-	//Do up down
-
-	float vy = (float)sin(abc[0].time * PI / abc[0].Maxtime) * Amplitude;
-
-	
-	if (enemyT) //team
+	for (int i = 0; i < 4; ++i)
 	{
+		float sx = 30;
+		float sy = 30 * (float)i + 40;
+		char buffer[100] = { 0 };
+		sprintf_s(buffer, 100, "%i t: %3.2f %3.2f e: %3.2f %3.2f\n", i, team[i].time, team[i].Maxtime, enemy[i].time, enemy[i].Maxtime);
+		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+		CP_Settings_TextSize(20.0f);
+		CP_Font_DrawText(buffer, sx, sy);
+	}
+	
+	
+	if (enemyT) //enemy
+	{
+		//Do up down
+		double ratio = abc[0].time / /*abc[0].Maxtime*/1.f;
+
+		float vy = (float)sin( ratio * PI ) * Amplitude;
+
 		Drawunit(abc[0], x, y - vy);
 		Drawunit(abc[3], x + 250 * 3, y);
 	}
-	else
+	else //team
 	{
+		//Do up down
+		double ratio = abc[3].time / /* abc[3].Maxtime*/ 1.f;
+
+		float vy = (float)sin(ratio * PI) * Amplitude;
+
 		Drawunit(abc[3], x + 250 * 3, y + vy);
 		Drawunit(abc[0], x, y);
 	}

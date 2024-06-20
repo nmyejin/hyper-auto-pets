@@ -6,6 +6,11 @@ int storelevel = 1;
 int select;
 int shuffle = 1; // 홀수면 섞고 아니면 얼리기
 
+struct unit shop[3];
+struct unit team[4];
+struct unit enemy[4];
+struct unit fightteam[4];
+
 void game_init()
 {
 	money = 100;

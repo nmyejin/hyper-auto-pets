@@ -22,6 +22,7 @@ extern int stage;
 extern int storelevel;
 extern int select;
 
-struct unit shop[3];
-struct unit team[4];
-struct unit enemy[4];
+extern struct unit shop[3];
+extern struct unit team[4];
+extern struct unit enemy[4];
+extern struct unit fightteam[4];
