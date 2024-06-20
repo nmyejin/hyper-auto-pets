@@ -36,30 +36,136 @@ void summonenemyteam(int whichstage)
 }
 void hit()
 {
-	team->life -= enemy->att;
-	enemy->life -= team->att;
+	fightteam[3].life -= enemy->att;
+	enemy->life -= fightteam[3].att;
 }
 int checkdead()
 {
-	if (team->life <= 0 && enemy->life <= 0) // both dead
+	if (team[3].life <= 0 && enemy->life <= 0) // both dead
 		return 0;
-	if (team->life > 0 && enemy->life <= 0) // enemy dead, team alive
+	if (team[3].life > 0 && enemy->life <= 0) // enemy dead, team alive
 		return 1;
-	if (team->life <= 0 && enemy->life > 0) // enemy alive, team dead
+	if (team[3].life <= 0 && enemy->life > 0) // enemy alive, team dead
 		return 2;
-	if (team->life > 0 && enemy->life > 0) // both alive
+	if (team[3].life > 0 && enemy->life > 0) // both alive
 		return 3;
 	return -1;
 }
 
-void fillin_team_emptyslot()
+
+// Todo team type [1, 0, 0, 1] => [0, 0, 1, 1] 
+void fillin_emptyslot(struct unit* abc, int enemyT)// enemy 1 team 0
 {
-	for (int i = 1; i < 4; i++)
+	if (abc[1].type == 0 && abc[2].type == 0)
 	{
-		if (team[i].type == 0)
+		if (enemyT == 0) // team
 		{
-			team[i].type = team[i - 1].type;
-			team[i - 1].type = 0;
+			abc[2] = abc[0];
+			abc[0].type = 0;
 		}
+		else if (enemyT == 1) // enemy
+		{
+			abc[1] = abc[3];
+			abc[3].type = 0;
+		}
+	}
+
+	if (enemyT == 0) // team
+	{
+		for (int i = 3; i > 0; i--)
+		{
+			if (abc[i].type == 0)
+			{
+				abc[i] = abc[i - 1];
+				abc[i].time = 0;
+				abc[i - 1].type = 0;
+
+			}
+		}
+	}
+	else if (enemyT == 1) // enemy
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (abc[i].type == 0)
+			{
+				abc[i] = abc[i + 1];
+				abc[i].time = 0;
+				abc[i + 1].type = 0;
+			}
+		}
+	}
+}
+
+void CheckHit()
+{
+	if (1 <= fightteam[3].time)
+	{
+		hit();
+		if (checkdead() == 0)
+		{
+			fightteam[3].type = 0;
+			enemy[0].type = 0;
+		}
+		if (checkdead() == 1)
+		{
+			enemy[0].type = 0;
+		}
+		if (checkdead() == 2)
+		{
+			fightteam[3].type = 0;
+		}
+
+		fightteam[3].time = 0;
+		enemy[0].time = 0;
+	}
+}
+
+void timer()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		fightteam[i].time += CP_System_GetDt();
+		enemy[i].time += CP_System_GetDt();
+	}
+}
+
+int checkcombatover()
+{
+	int t = 0;
+	for (int i = 0; i < 4; i++) {
+		if (fightteam[i].type == 0)
+			t++;
+	}
+	int e = 0;
+	for (int i = 0; i < 4; i++) {
+		if (enemy[i].type == 0)
+			e++;
+	}
+
+	if (e == 4 && t == 4)//draw
+	{
+		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		return 2;
+	}
+	if (t == 4)//lose
+	{
+		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		Playerlife -= 1;
+		return 0;
+	}
+	if (e == 4)//win
+	{	
+		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		stage += 1;
+		return 1;
+	}
+	return -1;
+}
+void teamintofightteam()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		fightteam[i] = team[i];
 	}
 }
