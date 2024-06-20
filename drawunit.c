@@ -510,3 +510,15 @@ void drawfightteam(struct unit* abc, float x, float y, int enemyT)
 		Drawunit(abc[0], x, y);
 	}
 }
+void drawsellinterface()
+{
+	CP_Graphics_DrawRect(1525, 580, 425, 200);
+}
+int checksell()
+{
+	if (releasedrect(1525, 580, 425, 200))
+	{
+		return 1;
+	}
+	return 0;
+}

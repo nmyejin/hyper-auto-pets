@@ -36,18 +36,18 @@ void summonenemyteam(int whichstage)
 }
 void hit()
 {
-	fightteam[3].life -= enemy->att;
-	enemy->life -= fightteam[3].att;
+	fightteam[3].life -= enemy[0].att;
+	enemy[0].life -= fightteam[3].att;
 }
 int checkdead()
 {
-	if (team[3].life <= 0 && enemy->life <= 0) // both dead
+	if (fightteam[3].life <= 0 && enemy[0].life <= 0) // both dead
 		return 0;
-	if (team[3].life > 0 && enemy->life <= 0) // enemy dead, team alive
+	if (fightteam[3].life > 0 && enemy[0].life <= 0) // enemy dead, team alive
 		return 1;
-	if (team[3].life <= 0 && enemy->life > 0) // enemy alive, team dead
+	if (fightteam[3].life <= 0 && enemy[0].life > 0) // enemy alive, team dead
 		return 2;
-	if (team[3].life > 0 && enemy->life > 0) // both alive
+	if (fightteam[3].life > 0 && enemy[0].life > 0) // both alive
 		return 3;
 	return -1;
 }
@@ -145,19 +145,22 @@ int checkcombatover()
 
 	if (e == 4 && t == 4)//draw
 	{
+		givemoneystage();
 		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
 		return 2;
 	}
 	if (t == 4)//lose
 	{
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		givemoneystage();
 		Playerlife -= 1;
+		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
 		return 0;
 	}
 	if (e == 4)//win
 	{	
+		stage++;
+		givemoneystage();
 		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
-		stage += 1;
 		return 1;
 	}
 	return -1;
@@ -168,4 +171,42 @@ void teamintofightteam()
 	{
 		fightteam[i] = team[i];
 	}
+}
+void givemoneystage()
+{
+
+	switch (stage)
+	{
+	case 1:
+		money = money;
+		break;
+	case 2:
+		money += 2;
+		break;
+	case 3:
+		money += 4;
+		break;
+	case 4:
+		money += 8;
+		break;
+	case 5:
+		money += 10;
+		break;
+	case 6:
+		money += 12;
+		break;
+	case 7:
+		money += 14;
+		break;
+	case 8:
+		money += 16;
+		break;
+	case 9:
+		money += 18;
+		break;
+	case 10:
+		money += 20;
+		break;
+	}
+
 }

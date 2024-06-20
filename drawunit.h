@@ -35,8 +35,11 @@ void DrawTeam();
 void drawfreeze();
 void drawendturn();
 void drawrefresh();
+void drawsellinterface();
+
 //combat
 void drawunitlife(int life, float unitx, float unity);
 void drawunitatt(int att, float unitx, float unity);
 void drawfightteam(struct unit* abc, float x, float y, int enemyT);
-void combat_interface();
+void combat_interface(); 
+int checksell();

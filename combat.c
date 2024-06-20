@@ -21,7 +21,7 @@ void combat_init(void)
 }
 void combat_update(void)
 {
-	if (T >= 2) {
+	if (T >= 1) {
 		
 		fillin_emptyslot(fightteam, 0);
 		fillin_emptyslot(enemy, 1);
@@ -35,7 +35,6 @@ void combat_update(void)
 	drawfightteam(fightteam, 125, 100, 0);
 	drawfightteam(enemy, 875, 700, 1);
 	checkcombatover();
-
 }
 void combat_exit(void)
 {

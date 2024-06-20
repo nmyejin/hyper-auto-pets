@@ -12,3 +12,4 @@ void CheckHit();
 void timer();
 int checkcombatover();
 void teamintofightteam();
+void givemoneystage();

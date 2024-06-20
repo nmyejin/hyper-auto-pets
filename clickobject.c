@@ -56,7 +56,7 @@ int releasedrect(float posx, float posy, float width, float height)
 	float x = CP_Input_GetMouseX();
 	float y = CP_Input_GetMouseY();
 
-	if (CP_Input_MouseReleased(MOUSE_BUTTON_1) && (posx <= x && x <= posx + width) && (posy <= y && y <= posy + height))
+	if (posx <= x && x <= posx + width && (posy <= y && y <= posy + height))
 	{
 		return 1;
 	}

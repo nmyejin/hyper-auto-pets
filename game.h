@@ -15,6 +15,8 @@ void summonshop();
 int checkstorelist(int sl);
 void Drawspidertext(float posx, float posy);
 void Drawunittext(float posx, float posy, int type);
+void Callswap(int myId, int otherId, int size); 
+void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam);
 
 extern int money;
 extern int Playerlife;
