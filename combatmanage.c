@@ -307,4 +307,12 @@ void snasnapping_turtleskill()
 	{
 		enemy[0].life = 1;
 	}
+} 
+
+void checkgameover()
+{
+	if (Playerlife <= 0)
+	{
+		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+	}
 }
