@@ -17,3 +17,6 @@ bin
 Debug
 Release
 *log.txt
+Processing_Sample.sln
+Processing_Sample.vcxproj
+Processing_Sample.vcxproj.user
