@@ -4,6 +4,7 @@
 #include "unit.h"
 #include "game.h"
 #include "combatmanage.h"
+#include "gameover.h"
 
 void summonenemyteam(int stage);
 void hit();
@@ -23,3 +24,4 @@ void hawkskill();
 void elephantskill();
 void snasnapping_turtleskill();
 void viperskill();
+int checkgameover();

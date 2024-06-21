@@ -153,18 +153,24 @@ int checkcombatover()
 	{
 		givemoneystage();
 		Playerlife -= 1;
+		if (checkgameover())
+			return 0;
 		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
 		return 0;
 	}
 	if (e == 4)//win
 	{	
 		stage++;
-		givemoneystage();
+		checkgameover();
+		if (checkgameover())
+			return 0;
 		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+
 		return 1;
 	}
 	return -1;
 }
+
 void teamintofightteam()
 {
 	for (int i = 0; i < 4; i++)
@@ -248,6 +254,13 @@ void skunkskill()
 			enemy[i].life -= 3;
 		}
 	}
+	if (enemy[0].type == skunk && enemy[0].life <= 0)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			team[i].life -= 3;
+		}
+	}
 }
 
 void owlskill()
@@ -257,6 +270,11 @@ void owlskill()
 		enemy[3].life -= fightteam[3].att;
 		enemy[0].life += fightteam[3].att;
 	}
+	if (enemy[0].type == owl)
+	{
+		fightteam[0].life -= enemy[0].att;
+		fightteam[3].life += enemy[0].att;
+	}
 }
 
 void poisondartfrogskill()
@@ -265,6 +283,10 @@ void poisondartfrogskill()
 	{
 		enemy[0].life = -99;
 	}
+	if (enemy[0].type == poisondart_frog && enemy[0].life <= 0)
+	{
+		fightteam[3].life = -99;
+	}
 }
 
 void hawkskill()
@@ -272,6 +294,10 @@ void hawkskill()
 	if (fightteam[3].type == hawk)
 	{
 		enemy[1].life -= fightteam[3].att;
+	}
+	if (enemy[0].type == hawk)
+	{
+		team[2].life -= enemy[0].att;
 	}
 }
 
@@ -282,6 +308,13 @@ void elephantskill()
 		for (int i = 1; i < 4; i++)
 		{
 			enemy[i].life -= 2;
+		}
+	}
+	if (enemy[0].type == elephant)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			team[i].life -= 2;
 		}
 	}
 }
@@ -299,7 +332,20 @@ void viperskill()
 		fightteam[r].life += enemy[0].life;
 		enemy[0].life = -99;
 	}
+	if (enemy[0].type == viper)
+	{
+		int r = CP_Random_RangeInt(1, 3);
+		while (fightteam[r].type != 0)
+		{
+			r = CP_Random_RangeInt(1, 3);
+		}
+		enemy[r].att += team[3].att;
+		enemy[r].life += team[3].life;
+		team[3].life = -99;
+	}
 }
+
+
 
 void snasnapping_turtleskill()
 {
@@ -307,4 +353,18 @@ void snasnapping_turtleskill()
 	{
 		enemy[0].life = 1;
 	}
+	if (enemy[0].type == snapping_turtle)
+	{
+		team[3].life = 1;
+	}
+} 
+
+int checkgameover()
+{
+	if (Playerlife <= 0 || stage > 10)
+	{
+		CP_Engine_SetNextGameState(gameover_init, gameover_update, gameover_exit);
+		return 1;
+	}
+	return 0;
 }
