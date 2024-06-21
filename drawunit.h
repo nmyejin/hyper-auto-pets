@@ -35,6 +35,7 @@ void DrawTeam();
 void drawfreeze();
 void drawendturn();
 void drawrefresh();
+void drawupgradestore();
 void drawsellinterface();
 
 //combat

@@ -265,6 +265,7 @@ void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 	CP_Graphics_DrawRect(700, 600, 250, 200); // storeslot1
 
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+	CP_Graphics_DrawRect( 200, 840, 250, 100); // upgrade store
 	CP_Graphics_DrawRect(1200, 800, 300, 200); // refresh store
 	CP_Graphics_DrawRect(1525, 800, 200, 200); // freeze store
 	CP_Graphics_DrawRect(1750, 800, 200, 200); // endturn
@@ -423,6 +424,12 @@ void drawrefresh()
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_TextSize(100.0f);
 	CP_Font_DrawText("Refresh", 1200, 850);
+}
+void drawupgradestore()
+{
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_TextSize(100.0f);
+	CP_Font_DrawText("Upgrade", 200, 840);
 }
 //combat
 void drawunitlife(int life, float unitx, float unity)

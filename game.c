@@ -6,6 +6,8 @@ int storelevel = 1;
 int select = 0;
 int shuffle = 2; // 홀수면 섞고 아니면 얼리기
 
+int upgradeShopDiscount = 0;
+
 struct unit shop[3];
 struct unit team[4];
 struct unit enemy[4];
@@ -112,6 +114,7 @@ void game_update()
 	drawendturn();
 	drawfreeze();
 	drawrefresh();
+	drawupgradestore();
 	
 	DrawShop();
 	
@@ -127,6 +130,11 @@ void game_update()
 			shuffle += 2;
 		else if (shuffle == 4)
 			shuffle -= 2;
+	}
+
+	if (isupgradeclicked() == 1)
+	{
+		UpgradeShop();
 	}
 
 	if (isendturnclicked() == 1)
@@ -173,6 +181,7 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 		break;
 
 	case sparrow:
+		upgradeShopDiscount--;
 		break;
 
 	case frog:
@@ -221,6 +230,9 @@ void BuySpider(int shopID, int teamID)
 
 	shop[shopID].att += shop[randShopID].att;
 	shop[shopID].life += shop[randShopID].life;
+
+	// 흡수된 unit 삭제
+	shop[randShopID].type = 0;
 }
 
 void BuyFrog(int shopID)

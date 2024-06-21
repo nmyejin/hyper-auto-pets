@@ -1,5 +1,13 @@
 #include "shop.h"
 
+int shopInfo[5][5] = {	// cost, rate(unit A, B, C, D)
+	{ 0,100,  0,  0,  0},
+	{10, 50, 50,  0,  0},
+	{15, 25, 50, 25,  0},
+	{25, 15, 40, 40,  5},
+	{30, 10, 35, 45, 10}
+};
+
 int checkstorelist(int sl)
 {
 	if (sl == 1)
@@ -14,11 +22,30 @@ int checkstorelist(int sl)
 }
 void summonshop()
 {
-	for (int i = 0; i < 3; i++)
+	srand((unsigned int)time(NULL));
+	
+	for (int i = 0; i < SHOP_SIZE; i++)
 	{
-		int store_unit = CP_Random_RangeInt(1, checkstorelist(storelevel));
-		shop[i].type = store_unit;
-		LoadUnitFromFile(&shop[i]);
+		int randNum = rand() % 100;
+		int threshold = 0;
+
+		for (int j = 0; j < 4; j++)	// 상점 레벨
+		{
+			threshold += shopInfo[storelevel - 1][j + 1];
+
+			if (randNum < threshold)
+			{
+				int storeUnit;
+				if (j == 0)
+					storeUnit = CP_Random_RangeInt(1, checkstorelist(j + 1));
+				else
+					storeUnit = CP_Random_RangeInt(1 + checkstorelist(j), checkstorelist(j + 1));
+
+				shop[i].type = storeUnit;
+				LoadUnitFromFile(&shop[i]);
+				break;
+			}
+		}
 	}
 }
 
@@ -36,9 +63,26 @@ int isfreezeclicked()
 	return 0;
 }
 
+int isupgradeclicked()
+{
+	if (clickedrect(200, 840, 250, 100) == 1)
+		return 1;
+	return 0;
+}
+
 int isendturnclicked()
 {
 	if (clickedrect(1750, 800, 200, 200) == 1)
 		return 1;
 	return 0;
+}
+
+void UpgradeShop()
+{
+	int cost = shopInfo[storelevel][0] + upgradeShopDiscount;
+	if (storelevel < 5 && money >= cost)
+	{
+		money -= cost;
+		storelevel++;
+	}
 }

@@ -32,6 +32,7 @@ extern int Playerlife;
 extern int stage;
 extern int storelevel;
 extern int select;
+extern int upgradeShopDiscount;
 
 extern struct unit shop[SHOP_SIZE];
 extern struct unit team[TEAM_SIZE];
