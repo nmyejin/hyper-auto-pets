@@ -31,7 +31,7 @@ void dogskill(int shopID);
 void BuyCheerleader();
 void BuyChicken(int teamID);
 void ActivatePig();
-void BuyChameleon(int shopID, int teamID);
+void BuyChameleon(int teamIdx);
 
 extern int money;
 extern int Playerlife;
