@@ -129,7 +129,7 @@ void Drawunit(struct unit store_unit, float x, float y)
 	else if (store_unit.type <= magpie)
 		CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
 	else if (store_unit.type <= chameleon)
-		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+		CP_Settings_Fill(CP_Color_Create(120, 120, 120, 255));
 
 
 	CP_Graphics_DrawRect(x, y, 250, 200);

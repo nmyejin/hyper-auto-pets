@@ -1,11 +1,13 @@
 #include "game.h"
-int money = 0;//0
+int money = 100;//0
 int Playerlife = 5;
 int stage = 1;
 int storelevel = 1;
 int select = 0;
 int shuffle = 2; // È¦¼ö¸é ¼¯°í ¾Æ´Ï¸é ¾ó¸®±â
 int upgradeShopDiscount = 0;
+
+int pigCount = 0;
 
 struct unit shop[SHOP_SIZE];
 struct unit team[TEAM_SIZE];
@@ -87,6 +89,8 @@ void game_update()
 
 					if (team[select - 4].type == hamster)
 						SellHamster();
+					else if (team[select - 4].type == pig)
+						pigCount--;
 					team[select - 4].type = 0;
 				}
 
@@ -138,6 +142,8 @@ void game_update()
 
 	if (isendturnclicked() == 1)
 	{
+		ActivatePig();
+
 		money = 0;
 		CP_Engine_SetNextGameState(stage_init, stage_update, stage_exit);
 		CP_Engine_Run();
@@ -176,21 +182,12 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 		// ÆÈ ¶§ effect
 		break;
 
-	case pigeon:
-		break;
-
 	case sparrow:
 		upgradeShopDiscount--;
 		break;
 
 	case frog:
 		BuyFrog(shopID);
-		break;
-
-	case dog:
-		break;
-		
-	case turtle:
 		break;
 
 	case chicken:
@@ -200,13 +197,24 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 	case cheerleader:
 		BuyCheerleader();
 		break;
-	//default:
-	//	return;
+
+	case pig:
+		pigCount++;
+		break;
+
+	case tiger:
+		break;
+
+	case chameleon:
+		BuyChameleon(teamID);
+		break;
 	}
 
 	money -= 3;
 	//money -= shop[shopID].price;
-	team[teamID] = shop[shopID];
+
+	if (shop[shopID].type != chameleon)
+		team[teamID] = shop[shopID];
 	shop[shopID].type = 0;
 }
 
@@ -310,4 +318,40 @@ void BuyChicken(int teamID)
 			return;
 		}
 	}
+}
+
+void ActivatePig()
+{
+	if (pigCount >= 0 && money > 0)
+	{
+		for (int i = 0; i < TEAM_SIZE; i++)
+		{
+			if (team[i].type == pig)
+			{
+				team[i].att += 4;
+				team[i].life += 4;
+			}
+		}
+	}
+}
+
+void BuyChameleon(int teamIdx)
+{
+	int maxIdx = teamIdx;
+	int maxValue = 0;
+
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (team[i].type == 0)
+			continue;
+
+		int value = team[i].att + team[i].life;
+		if (value > maxValue)
+		{
+			maxIdx = i;
+			maxValue = value;
+		}
+	}
+
+	team[teamIdx] = team[maxIdx];
 }
