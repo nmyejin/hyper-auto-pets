@@ -39,7 +39,6 @@ struct unit
 	enum unitlist type;
 	int Maxhp, originalatt;
 	int att, life;
-	//char skill;
 };
 
 void LoadUnitFromFile(struct unit* myunit);
