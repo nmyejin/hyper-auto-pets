@@ -1,15 +1,18 @@
-#include "game.h"
-int money = 1000;//0
+ï»¿#include "game.h"
+int money = 100;//0
 int Playerlife = 5;
 int stage = 1;
 int storelevel = 1;
 int select = 0;
-int shuffle = 2; // È¦¼ö¸é ¼¯°í ¾Æ´Ï¸é ¾ó¸®±â
+int shuffle = 2; // È¦ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½ó¸®±ï¿½
+int upgradeShopDiscount = 0;
 
-struct unit shop[3];
-struct unit team[4];
-struct unit enemy[4];
-struct unit fightteam[4];
+int pigCount = 0;
+
+struct unit shop[SHOP_SIZE];
+struct unit team[TEAM_SIZE];
+struct unit enemy[TEAM_SIZE];
+struct unit fightteam[TEAM_SIZE];
 
 void game_init()
 {
@@ -26,7 +29,7 @@ void game_init()
 
 void game_update()
 {
-	//ÁÂÇ¥
+	//work mode
 	CP_Settings_TextSize(20.0f);
 	char buffer[50] = { 0 };
 	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
@@ -73,6 +76,8 @@ void game_update()
 
 					if (team[select - 4].type == hamster)
 						SellHamster();
+					else if (team[select - 4].type == pig)
+						pigCount--;
 					team[select - 4].type = 0;
 				}
 
@@ -99,6 +104,7 @@ void game_update()
 	drawendturn();
 	drawfreeze();
 	drawrefresh();
+	drawupgradestore();
 	
 	DrawShop();
 	
@@ -116,8 +122,15 @@ void game_update()
 			shuffle -= 2;
 	}
 
+	if (isupgradeclicked() == 1)
+	{
+		UpgradeShop();
+	}
+
 	if (isendturnclicked() == 1)
 	{
+		ActivatePig();
+
 		money = 0;
 		CP_Engine_SetNextGameState(stage_init, stage_update, stage_exit);
 		CP_Engine_Run();
@@ -153,17 +166,37 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 		break;
 
 	case hamster:
-		// ÆÈ ¶§ effect
-		break;
-
-	case pigeon:
+		// ï¿½ï¿½ ï¿½ï¿½ effect
 		break;
 
 	case sparrow:
+		upgradeShopDiscount--;
+		break;	
+		
+	case pigeon:
 		break;
 
 	case frog:
 		BuyFrog(shopID);
+		break;
+
+	case chicken:
+		BuyChicken(teamID);
+		break;
+
+	case cheerleader:
+		BuyCheerleader();
+		break;
+
+	case pig:
+		pigCount++;
+		break;
+
+	case tiger:
+		break;
+
+	case chameleon:
+		BuyChameleon(teamID);
 		break;
 	case dog:
 		dogskill(shopID);
@@ -173,7 +206,9 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 
 	money -= 3;
 	//money -= shop[shopID].price;
-	team[teamID] = shop[shopID];
+
+	if (shop[shopID].type != chameleon)
+		team[teamID] = shop[shopID];
 	shop[shopID].type = 0;
 }
 
@@ -181,7 +216,7 @@ void BuySpider(int shopID, int teamID)
 {
 	int i;
 
-	// »óÁ¡ Àç°í °³¼ö
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int stock = 0;
 	for (i = 0; i < SHOP_SIZE; i++)
 	{
@@ -189,11 +224,11 @@ void BuySpider(int shopID, int teamID)
 			stock++;
 	}
 
-	// »óÁ¡¿¡ spider¸¸ ÀÖ´Â °æ¿ì (Èí¼öÇÒ unitÀÌ ¾øÀ½)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ spiderï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ unitï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	if (stock == 1)
 		return;
 
-	// »óÁ¡ unit Áß ·£´ýÀ¸·Î ÇÏ³ª ¼±ÅÃÇÏ¿© att, life Èí¼ö
+	// ï¿½ï¿½ï¿½ï¿½ unit ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ att, life ï¿½ï¿½ï¿½
 	srand((unsigned int)time(NULL));
 	int randShopID = shopID + (rand() % (SHOP_SIZE - 1)) + 1;
 	if (randShopID >= SHOP_SIZE)
@@ -209,11 +244,14 @@ void BuySpider(int shopID, int teamID)
 
 	shop[shopID].att += shop[randShopID].att;
 	shop[shopID].life += shop[randShopID].life;
+
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ unit ï¿½ï¿½ï¿½ï¿½
+	shop[randShopID].type = 0;
 }
 
 void BuyFrog(int shopID)
 {
-	// stage¸¸Å­ att, life¿¡ ´õÇØÁü
+	// stageï¿½ï¿½Å­ att, lifeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	shop[shopID].att += stage;
 	shop[shopID].life += stage;
 }
@@ -222,7 +260,7 @@ void SellHamster()
 {
 	int i, sellID = select - 4;
 
-	// team ³²Àº ÀÎ¿ø
+	// team ï¿½ï¿½ï¿½ï¿½ ï¿½Î¿ï¿½
 	int teamNum = 0;
 	for (i = 0; i < TEAM_SIZE; i++)
 	{
@@ -230,7 +268,7 @@ void SellHamster()
 			teamNum++;
 	}
 
-	// team¿¡ hamster¸¸ ÀÖ´Â °æ¿ì (´Ù¸¥ team unit ¾øÀ½)
+	// teamï¿½ï¿½ hamsterï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ (ï¿½Ù¸ï¿½ team unit ï¿½ï¿½ï¿½ï¿½)
 	if (teamNum == 1)
 		return;
 
@@ -249,6 +287,67 @@ void SellHamster()
 
 	team[randTeamID].att += 2;
 	team[randTeamID].life += 2;
+}
+
+void BuyCheerleader()
+{
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (team[i].type != 0)
+		{
+			team[i].att += 2;
+			team[i].life += 2;
+		}
+	}
+}
+
+void BuyChicken(int teamID)
+{
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (i != teamID && team[i].type == 0)
+		{
+			team[i].type = 9;
+			LoadUnitFromFile(&team[i]);
+			return;
+		}
+	}
+}
+
+void ActivatePig()
+{
+	if (pigCount >= 0 && money > 0)
+	{
+		for (int i = 0; i < TEAM_SIZE; i++)
+		{
+			if (team[i].type == pig)
+			{
+				team[i].att += 4;
+				team[i].life += 4;
+			}
+		}
+	}
+}
+
+void BuyChameleon(int teamIdx)
+{
+	int maxIdx = teamIdx;
+	int maxValue = 0;
+
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (team[i].type == 0)
+			continue;
+
+		int value = team[i].att + team[i].life;
+		if (value > maxValue)
+		{
+			maxIdx = i;
+			maxValue = value;
+		}
+	}
+
+	team[teamIdx] = team[maxIdx];
 }
 
 void dogskill(int shopID)
