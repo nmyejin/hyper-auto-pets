@@ -15,20 +15,21 @@ enum unitlist
 	dog = 6,
 	turtle = 7,
 	chicken = 8,
-	cheerleader = 9,
+	chick = 9,	// √ﬂ∞° (ªÛ¡°ø° ∂ﬂ∏È æ»µ )
+	cheerleader = 10,
 	//C
-	poisondart_frog = 10,
-	owl = 11,
-	pig = 12,
-	tiger = 13,
-	skunk = 14,
-	magpie = 15,
+	poisondart_frog = 11,
+	owl,
+	pig,
+	tiger,
+	skunk,
+	magpie = 16,
 	//D
-	hawk = 16,
-	viper = 17,
-	elephant = 18,
-	snapping_turtle = 19,
-	chameleon = 20
+	hawk = 17,
+	viper,
+	elephant,
+	snapping_turtle,
+	chameleon = 21
 };
 
 struct unit

@@ -5,13 +5,12 @@ int stage = 1;
 int storelevel = 1;
 int select = 0;
 int shuffle = 2; // 홀수면 섞고 아니면 얼리기
-
 int upgradeShopDiscount = 0;
 
-struct unit shop[3];
-struct unit team[4];
-struct unit enemy[4];
-struct unit fightteam[4];
+struct unit shop[SHOP_SIZE];
+struct unit team[TEAM_SIZE];
+struct unit enemy[TEAM_SIZE];
+struct unit fightteam[TEAM_SIZE];
 
 void game_init()
 {
@@ -188,6 +187,19 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 		BuyFrog(shopID);
 		break;
 
+	case dog:
+		break;
+		
+	case turtle:
+		break;
+
+	case chicken:
+		BuyChicken(teamID);
+		break;
+
+	case cheerleader:
+		BuyCheerleader();
+		break;
 	//default:
 	//	return;
 	}
@@ -273,4 +285,29 @@ void SellHamster()
 
 	team[randTeamID].att += 2;
 	team[randTeamID].life += 2;
+}
+
+void BuyCheerleader()
+{
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (team[i].type != 0)
+		{
+			team[i].att += 2;
+			team[i].life += 2;
+		}
+	}
+}
+
+void BuyChicken(int teamID)
+{
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (i != teamID && team[i].type == 0)
+		{
+			team[i].type = 9;
+			LoadUnitFromFile(&team[i]);
+			return;
+		}
+	}
 }

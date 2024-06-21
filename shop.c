@@ -35,12 +35,18 @@ void summonshop()
 
 			if (randNum < threshold)
 			{
-				int storeUnit;
+				int storeUnit = -1;
 				if (j == 0)
 					storeUnit = CP_Random_RangeInt(1, checkstorelist(j + 1));
 				else
-					storeUnit = CP_Random_RangeInt(1 + checkstorelist(j), checkstorelist(j + 1));
+				{
+					do
+					{
+						storeUnit = CP_Random_RangeInt(1 + checkstorelist(j), checkstorelist(j + 1));
+					} while (storeUnit == 9);
 
+				}
+				
 				shop[i].type = storeUnit;
 				LoadUnitFromFile(&shop[i]);
 				break;

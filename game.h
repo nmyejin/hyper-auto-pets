@@ -26,6 +26,8 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam);
 void SellHamster();
 void BuySpider(int shopID, int teamID);
 void BuyFrog(int shopID);
+void BuyCheerleader();
+void BuyChicken(int teamID);
 
 extern int money;
 extern int Playerlife;

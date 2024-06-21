@@ -2,230 +2,75 @@
 #include "math.h"
 void Drawunittext(float posx, float posy, int type)
 {
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_TextSize(100.0f);
+
 	switch (type)
 	{
 	case spider:
-		Drawspidertext(posx, posy);
+		CP_Font_DrawText("Spider", posx, posy);
 		break;
 	case hamster:
-		Drawhamstertext(posx, posy);
+		CP_Font_DrawText("Hamster", posx, posy);
 		break;
 	case pigeon:
-		Drawpigeontext(posx, posy);
+		CP_Font_DrawText("Pigeon", posx, posy);
 		break;
 	case sparrow:
-		Drawsparrowtext(posx, posy);
+		CP_Font_DrawText("Sparrow", posx, posy);
 		break;
 	case frog:
-		Drawfrogtext(posx, posy);
+		CP_Font_DrawText("Frog", posx, posy);
 		break;
 	case dog:
-		Drawdogtext(posx, posy);
+		CP_Font_DrawText("Dog", posx, posy);
 		break;
 	case turtle:
-		Drawturtletext(posx, posy);
+		CP_Font_DrawText("Turtle", posx, posy);
 		break;
 	case chicken:
-		Drawchickentext(posx, posy);
+		CP_Font_DrawText("Chicken", posx, posy);
+		break;
+	case chick:
+		CP_Font_DrawText("Chick", posx, posy);
 		break;
 	case cheerleader:
-		Drawcheerleadertext(posx, posy);
+		CP_Font_DrawText("Cheerleader", posx, posy);
 		break;
 	case poisondart_frog:
-		Drawpoisondart_frogtext(posx, posy);
+		CP_Font_DrawText("Poisonart frog", posx, posy);
 		break;
 	case owl:
-		Drawowltext(posx, posy);
+		CP_Font_DrawText("Owl", posx, posy);
 		break;
 	case pig:
-		Drawpigtext(posx, posy);
+		CP_Font_DrawText("Pig", posx, posy);
 		break;
 	case tiger:
-		Drawtigertext(posx, posy);
+		CP_Font_DrawText("Tiger", posx, posy);
 		break;
 	case skunk:
-		Drawskunktext(posx, posy);
+		CP_Font_DrawText("Skunk", posx, posy);
 		break;
 	case magpie:
-		Drawmagpietext(posx, posy);
+		CP_Font_DrawText("Magpie", posx, posy);
 		break;
 	case hawk:
-		Drawhawktext(posx, posy);
+		CP_Font_DrawText("Hawk", posx, posy);
 		break;
 	case viper:
-		Drawvipertext(posx, posy);
+		CP_Font_DrawText("Viper", posx, posy);
 		break;
 	case elephant:
-		Drawelephanttext(posx, posy);
+		CP_Font_DrawText("Elephant", posx, posy);
 		break;
 	case snapping_turtle:
-		Drawsnapping_turtletext(posx, posy);
+		CP_Font_DrawText("Snapping turtle", posx, posy);
 		break;
 	case chameleon:
-		Drawchameleontext(posx, posy);
+		CP_Font_DrawText("Chameleon", posx, posy);
 		break;
 	}
-}
-
-void Drawspidertext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("Spider", x, y);
-}
-void Drawhamstertext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("hamster", x, y);
-}
-void Drawpigeontext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("pigeon", x, y);
-}
-void Drawsparrowtext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("sparrow", x, y);
-}
-void Drawfrogtext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("frog", x, y);
-}
-void Drawdogtext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("pigeon", x, y);
-}
-void Drawturtletext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("turtle", x, y);
-}
-void Drawcheerleadertext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("cheerleader", x, y);
-}
-void Drawpoisondart_frogtext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("poisondart_frog", x, y);
-}
-void Drawowltext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("owl", x, y);
-}
-void Drawpigtext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("pig", x, y);
-}
-void Drawtigertext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("tiger", x, y);
-}
-void Drawskunktext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("skunk", x, y);
-}
-void Drawmagpietext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("magpie", x, y);
-}
-void Drawchickentext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("chicken", x, y);
-}
-void Drawhawktext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("hawk", x, y);
-}
-void Drawvipertext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("viper", x, y);
-}
-void Drawelephanttext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("elephant", x, y);
-}
-void Drawchameleontext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("chameleon", x, y);
-}
-void Drawsnapping_turtletext(float posx, float posy)
-{
-	float x = posx;
-	float y = posy;
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("snapping_turtle", x, y);
 }
 
 void Drawmoney(int howmuchmoney)
@@ -298,7 +143,8 @@ void Drawunit(struct unit store_unit, float x, float y)
 	drawunitatt(store_unit.att, x, y);
 	//DrawATT
 
-	switch (store_unit.type)
+	Drawunittext(x, y, store_unit.type);
+	/*switch (store_unit.type)
 	{
 	case spider:
 		Drawunittext(x, y, spider);
@@ -323,6 +169,9 @@ void Drawunit(struct unit store_unit, float x, float y)
 		break;
 	case chicken:
 		Drawunittext(x, y, chicken);
+		break;
+	case chick:
+		Drawunittext(x, y, chick);
 		break;
 	case cheerleader:
 		Drawunittext(x, y, cheerleader);
@@ -362,7 +211,7 @@ void Drawunit(struct unit store_unit, float x, float y)
 		break;
 	default:
 		break;
-	}
+	}*/
 }
 void Drawlife(int howmanylife)
 {
