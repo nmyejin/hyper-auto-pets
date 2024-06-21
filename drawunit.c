@@ -144,74 +144,6 @@ void Drawunit(struct unit store_unit, float x, float y)
 	//DrawATT
 
 	Drawunittext(x, y, store_unit.type);
-	/*switch (store_unit.type)
-	{
-	case spider:
-		Drawunittext(x, y, spider);
-		break;
-	case hamster:
-		Drawunittext(x, y, hamster);
-		break;
-	case pigeon:
-		Drawunittext(x, y, pigeon);
-		break;
-	case sparrow:
-		Drawunittext(x, y, sparrow);
-		break;
-	case frog:
-		Drawunittext(x, y, frog);
-		break;
-	case dog:
-		Drawunittext(x, y, dog);
-		break;
-	case turtle:
-		Drawunittext(x, y, turtle);
-		break;
-	case chicken:
-		Drawunittext(x, y, chicken);
-		break;
-	case chick:
-		Drawunittext(x, y, chick);
-		break;
-	case cheerleader:
-		Drawunittext(x, y, cheerleader);
-		break;
-	case poisondart_frog:
-		Drawunittext(x, y, poisondart_frog);
-		break;
-	case owl:
-		Drawunittext(x, y, owl);
-		break;
-	case pig:
-		Drawunittext(x, y, pig);
-		break;
-	case tiger:
-		Drawunittext(x, y, tiger);
-		break;
-	case skunk:
-		Drawunittext(x, y, skunk);
-		break;
-	case magpie:
-		Drawunittext(x, y, magpie);
-		break;
-	case hawk:
-		Drawunittext(x, y, hawk);
-		break;
-	case viper:
-		Drawunittext(x, y, viper);
-		break;
-	case elephant:
-		Drawunittext(x, y, elephant);
-		break;
-	case snapping_turtle:
-		Drawunittext(x, y, snapping_turtle);
-		break;
-	case chameleon:
-		Drawunittext(x, y, chameleon);
-		break;
-	default:
-		break;
-	}*/
 }
 void Drawlife(int howmanylife)
 {
@@ -319,8 +251,6 @@ void combat_interface()
 	CP_Graphics_DrawRect(1375, 700, 250, 200);
 	CP_Graphics_DrawRect(1625, 700, 250, 200);
 }
-
-#define PI 3.14159226535897932
 
 void drawfightteam(struct unit* abc, float x, float y, int enemyT)
 {

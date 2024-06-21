@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "unit.h"
 
+#define PI 3.14159226535897932
+
 void Drawunittext(float posx, float posy, int type);
 void Drawmoney(int howmuch);
 void Drawinterfaces(int howmuchmoney, int howmanylife, int stage);

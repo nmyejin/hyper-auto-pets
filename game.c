@@ -1,5 +1,5 @@
 #include "game.h"
-int money = 110;//0
+int money = 0;//0
 int Playerlife = 5;
 int stage = 1;
 int storelevel = 1;
