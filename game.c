@@ -196,7 +196,7 @@ void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 		break;
 
 	case chameleon:
-		BuyChameleon(teamID);
+		BuyChameleon(shopID, teamID);
 		break;
 	case dog:
 		dogskill(shopID);
@@ -329,9 +329,9 @@ void ActivatePig()
 	}
 }
 
-void BuyChameleon(int teamIdx)
+void BuyChameleon(int shopID, int teamID)
 {
-	int maxIdx = teamIdx;
+	int maxIdx = -1;
 	int maxValue = 0;
 
 	for (int i = 0; i < TEAM_SIZE; i++)
@@ -347,7 +347,10 @@ void BuyChameleon(int teamIdx)
 		}
 	}
 
-	team[teamIdx] = team[maxIdx];
+	if (maxIdx != -1)
+		team[teamID] = team[maxIdx];
+	else
+		team[teamID] = shop[shopID];
 }
 
 void dogskill(int shopID)
