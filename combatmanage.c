@@ -153,18 +153,24 @@ int checkcombatover()
 	{
 		givemoneystage();
 		Playerlife -= 1;
+		if (checkgameover())
+			return 0;
 		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
 		return 0;
 	}
 	if (e == 4)//win
 	{	
 		stage++;
-		givemoneystage();
+		checkgameover();
+		if (checkgameover())
+			return 0;
 		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+
 		return 1;
 	}
 	return -1;
 }
+
 void teamintofightteam()
 {
 	for (int i = 0; i < 4; i++)
@@ -301,6 +307,8 @@ void viperskill()
 	}
 }
 
+
+
 void snasnapping_turtleskill()
 {
 	if (fightteam[3].type == snapping_turtle)
@@ -309,10 +317,12 @@ void snasnapping_turtleskill()
 	}
 } 
 
-void checkgameover()
+int checkgameover()
 {
-	if (Playerlife <= 0)
+	if (Playerlife <= 0 || stage > 10)
 	{
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		CP_Engine_SetNextGameState(gameover_init, gameover_update, gameover_exit);
+		return 1;
 	}
+	return 0;
 }
