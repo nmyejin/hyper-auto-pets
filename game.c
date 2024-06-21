@@ -11,8 +11,6 @@ struct unit team[4];
 struct unit enemy[4];
 struct unit fightteam[4];
 
-
-
 void game_init()
 {
 	money += 10;
@@ -25,6 +23,7 @@ void game_init()
 	if(shuffle / 2 == 1)
 		summonshop();
 }
+
 void game_update()
 {
 	//work mode
@@ -84,6 +83,9 @@ void game_update()
 				if (checksell() == 1)
 				{
 					money += 1;
+
+					if (team[select - 4].type == hamster)
+						SellHamster();
 					team[select - 4].type = 0;
 				}
 
@@ -134,6 +136,7 @@ void game_update()
 		CP_Engine_Run();
 	}
 }
+
 void game_exit() 
 {
 
@@ -153,12 +156,109 @@ void Callswap(int myId, int otherId, int size)
 
 void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
 {
-	if (teamID < sizeteam && shopID < sizeshop && teamID >= 0 && shopID >= 0)
-	{
-		team[teamID] = shop[shopID];
-		money -= 3;
-		shop[shopID].type = 0;
+	if ((shopID < 0 || shopID >= sizeshop) || (teamID < 0 || teamID >= sizeteam))
+		return;
 
-		//OnUnitBuy 
+	switch (shop[shopID].type)
+	{
+	case spider:
+		BuySpider(shopID, teamID);
+		break;
+
+	case hamster:
+		// 팔 때 effect
+		break;
+
+	case pigeon:
+		break;
+
+	case sparrow:
+		break;
+
+	case frog:
+		BuyFrog(shopID);
+		break;
+
+	//default:
+	//	return;
 	}
+
+	money -= 3;
+	//money -= shop[shopID].price;
+	team[teamID] = shop[shopID];
+	shop[shopID].type = 0;
+}
+
+void BuySpider(int shopID, int teamID)
+{
+	int i;
+
+	// 상점 재고 개수
+	int stock = 0;
+	for (i = 0; i < SHOP_SIZE; i++)
+	{
+		if (shop[i].type != 0)
+			stock++;
+	}
+
+	// 상점에 spider만 있는 경우 (흡수할 unit이 없음)
+	if (stock == 1)
+		return;
+
+	// 상점 unit 중 랜덤으로 하나 선택하여 att, life 흡수
+	srand((unsigned int)time(NULL));
+	int randShopID = shopID + (rand() % (SHOP_SIZE - 1)) + 1;
+	if (randShopID >= SHOP_SIZE)
+		randShopID -= SHOP_SIZE;
+
+	while (randShopID == shopID || shop[randShopID].type == 0)
+	{
+		randShopID++;
+
+		if (randShopID >= SHOP_SIZE)
+			randShopID = 0;
+	}
+
+	shop[shopID].att += shop[randShopID].att;
+	shop[shopID].life += shop[randShopID].life;
+}
+
+void BuyFrog(int shopID)
+{
+	// stage만큼 att, life에 더해짐
+	shop[shopID].att += stage;
+	shop[shopID].life += stage;
+}
+
+void SellHamster()
+{
+	int i, sellID = select - 4;
+
+	// team 남은 인원
+	int teamNum = 0;
+	for (i = 0; i < TEAM_SIZE; i++)
+	{
+		if (team[i].type != 0)
+			teamNum++;
+	}
+
+	// team에 hamster만 있는 경우 (다른 team unit 없음)
+	if (teamNum == 1)
+		return;
+
+	srand((unsigned int)time(NULL));
+	int randTeamID = sellID + (rand() % (TEAM_SIZE - 1)) + 1;
+	if (randTeamID >= TEAM_SIZE)
+		randTeamID -= TEAM_SIZE;
+
+	while (randTeamID == sellID || team[randTeamID].type == 0)
+	{
+		randTeamID++;
+
+		if (randTeamID >= TEAM_SIZE)
+			randTeamID = 0;
+	}
+
+	team[randTeamID].att += 2;
+	team[randTeamID].life += 2;
 }
