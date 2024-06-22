@@ -5,7 +5,8 @@ int shopInfo[5][5] = {	// cost, rate(unit A, B, C, D)
 	{10, 50, 50,  0,  0},
 	{15, 25, 50, 25,  0},
 	{25, 15, 40, 40,  5},
-	{30, 10, 35, 45, 10}
+	//{30, 10, 35, 45, 10}
+	{30, 0, 0, 0, 100}
 };
 
 int LastIdxUnitTier(int sl)
@@ -20,7 +21,7 @@ int LastIdxUnitTier(int sl)
 		return chameleon;
 	return 0;
 }
-void SummonShop()
+void SummonShop(struct unit *shop)
 {
 	srand((unsigned int)time(NULL));
 	
@@ -47,8 +48,8 @@ void SummonShop()
 
 				}
 				
-				shopPlayer[i].type = storeUnit;
-				LoadUnitFromFile(&shopPlayer[i]);
+				shop[i].type = storeUnit;
+				LoadUnitFromFile(&shop[i]);
 				break;
 			}
 		}

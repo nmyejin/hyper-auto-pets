@@ -4,7 +4,7 @@
 #include "clickobject.h"
 
 int LastIdxUnitTier(int sl);
-void SummonShop();
+void SummonShop(struct unit* shop);
 int isrefreshclicked();
 int isfreezeclicked();
 int isupgradeclicked();

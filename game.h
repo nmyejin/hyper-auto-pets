@@ -21,7 +21,9 @@ extern struct unit teamEnemy[TEAM_SIZE];
 extern struct unit shopEnemy[SHOP_SIZE];
 extern struct unit fightteam[TEAM_SIZE];
 
-extern int money;	// enemy도 money 따로 써야 함
+extern int money;
+extern int moneyEnemy;
+
 extern int playerLife;
 extern int stage;
 extern int storelevel;
@@ -36,7 +38,8 @@ void GameExit(void);
 
 void Swap(int myId, int otherId, int size);
 
-void BuyUnit(struct unit* shop, struct unit* team, int shopID, int teamID);
+void BuyUnit(struct unit* shop, struct unit* team, int shopID, int teamID, int* gold);
+void SellUnit(struct unit* team, int teamIdx, int* gold);
 
 void BuySpider(struct unit* shop, int shopID);
 void SellHamster(struct unit* team);
@@ -46,7 +49,7 @@ void BuyDog(struct unit* team, struct unit* shop, int shopID);
 void BuyChicken(struct unit* team, int teamID);
 void BuyCheerleader(struct unit* team);
 
-void ActivatePig(struct unit* team);
-void SellMagpie();
+void ActivatePig(struct unit* team, int* gold);
+void SellMagpie(int* gold);
 
-void BuyChameleon(struct unit* team, int teamIdx);
+bool BuyChameleon(struct unit* team, int teamIdx);

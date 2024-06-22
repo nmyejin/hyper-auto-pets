@@ -1,49 +1,68 @@
 #include "combatmanage.h"
 
+int moneyEnemy;
+
+struct unit teamEnemy[TEAM_SIZE];
+struct unit shopEnemy[SHOP_SIZE];
+
 void summonenemyteam(int whichstage)
 {
-	for (int i = 0; i < 4; i++)
-	{
-		teamEnemy[i].type = 0;
-		LoadUnitFromFile(&teamEnemy[i]);
-	}
-	int buffer[4] = { 0 };
-	for (int j = 0; j < 10; j++)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (whichstage == j+1)
-			{
-				buffer[i] = CP_Random_RangeInt(j*2, (j * 2)+2);
-				--buffer[i];
-			}
-		}
-	}
-	if (buffer[0] <= 0 && buffer[1] <= 0 && buffer[2] <= 0 && buffer[3] <= 0)
-	{
-		buffer[0] = 1;
-	}
-	int j = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (buffer[i] > 0) 
-		{
-			teamEnemy[j].type = buffer[i];
-			LoadUnitFromFile(&teamEnemy[j]);
-			j++;
-		}
-	}
-
-	//while (money > 0)
+	//for (int i = 0; i < 4; i++)
 	//{
-	//	CP_Vector shopInfo = IdxMaxPower(shop, SHOP_SIZE);	// idx, value
-	//	CP_Vector enemyInfo = IdxMinPower(enemy, TEAM_SIZE);
+	//	teamEnemy[i].type = 0;
+	//	LoadUnitFromFile(&teamEnemy[i]);
+	//}
+	//int buffer[4] = { 0 };
+	//for (int j = 0; j < 10; j++)
+	//{
+	//	for (int i = 0; i < 4; i++)
+	//	{
+	//		if (whichstage == j+1)
+	//		{
+	//			buffer[i] = CP_Random_RangeInt(j*2, (j * 2)+2);
+	//			--buffer[i];
+	//		}
+	//	}
+	//}
+	//if (buffer[0] <= 0 && buffer[1] <= 0 && buffer[2] <= 0 && buffer[3] <= 0)
+	//{
+	//	buffer[0] = 1;
+	//}
+	//int j = 0;
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	if (buffer[i] > 0) 
+	//	{
+	//		teamEnemy[j].type = buffer[i];
+	//		LoadUnitFromFile(&teamEnemy[j]);
+	//		j++;
+	//	}
+	//}
+	moneyEnemy = 10;
+	SummonShop(shopEnemy);
+
+	//while (moneyEnemy > 0)
+	//{
+	//	CP_Vector shopInfo = IdxMaxPower(shopEnemy, SHOP_SIZE);	// pair(idx, value)
+	//	CP_Vector enemyInfo = IdxMinPower(teamEnemy, TEAM_SIZE);
 
 	//	if (shopInfo.y > enemyInfo.y)
 	//	{
-	//		BuyUnit(shopInfo.x, )
+	//		if (teamEnemy[(int)enemyInfo.x].type != 0)
+	//			SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
+	//		BuyUnit(shopEnemy, teamEnemy, (int)shopInfo.x, (int)enemyInfo.x, &moneyEnemy);
+	//	}
+	//	else
+	//	{
+	//		moneyEnemy--;
+	//		SummonShop(shopEnemy);
 	//	}
 	//}
+
+	for (int i = 0; i < 4; i++)
+	{
+		BuyUnit(shopEnemy, teamEnemy, 0, i, &moneyEnemy);
+	}
 }
 void hit()
 {	
@@ -382,37 +401,37 @@ int checkgameover()
 	return 0;
 }
 
-//CP_Vector IdxMaxPower(struct unit* arr, int size)
-//{
-//	int idx = 0, value = 0;
-//	for (int i = 0; i < size; i++)\
-//	{
-//		int v = arr[i].att + arr[i].life;
-//		if (value < v)
-//		{
-//			idx = i;
-//			value = v;
-//		}
-//	}
-//
-//	return CP_Vector_Set(idx, value);
-//}
-//
-//CP_Vector IdxMinPower(struct unit* arr, int size)
-//{
-//	int idx = 0, value = 100000;
-//	for (int i = 0; i < size; i++)
-//	{
-//		if (arr[i].type == 0)
-//			return i;
-//
-//		int v = arr[i].att + arr[i].life;
-//		if (value > v)
-//		{
-//			idx = i;
-//			value = v;
-//		}
-//	}
-//
-//	return CP_Vector_Set(idx, value);
-//}
+CP_Vector IdxMaxPower(struct unit* arr, int size)
+{
+	int idx = 0, value = 0;
+	for (int i = 0; i < size; i++)\
+	{
+		int v = arr[i].att + arr[i].life;
+		if (value < v)
+		{
+			idx = i;
+			value = v;
+		}
+	}
+
+	return CP_Vector_Set((float)idx, (float)value);
+}
+
+CP_Vector IdxMinPower(struct unit* arr, int size)
+{
+	int idx = 0, value = 100000;
+	for (int i = 0; i < size; i++)
+	{
+		if (arr[i].type == 0)
+			return CP_Vector_Set((float)i, 0.f);
+
+		int v = arr[i].att + arr[i].life;
+		if (value > v)
+		{
+			idx = i;
+			value = v;
+		}
+	}
+
+	return CP_Vector_Set((float)idx, (float)value);
+}
