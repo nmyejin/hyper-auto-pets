@@ -1,46 +1,52 @@
 #pragma once
-#include "clickobject.h"
-#include "cprocessing.h"
-#include "drawunit.h"
-#include "shop.h"
-#include "unit.h"
-#include "stage.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
+#include "cprocessing.h"
+
+#include "unit.h"
+#include "clickobject.h"
+#include "drawunit.h"
+#include "shop.h"
+#include "stage.h"
 
 #define SHOP_SIZE 3
 #define TEAM_SIZE 4
 
-void game_init(void);
-void game_update(void);
-void game_exit(void);
+extern struct unit teamPlayer[TEAM_SIZE];
+extern struct unit shopPlayer[SHOP_SIZE];
+extern struct unit teamEnemy[TEAM_SIZE];
+extern struct unit shopEnemy[SHOP_SIZE];
+extern struct unit fightteam[TEAM_SIZE];
 
-
-void summonshop();
-int checkstorelist(int sl);
-//void Drawspidertext(float posx, float posy);
-void Drawunittext(float posx, float posy, int type);
-void Callswap(int myId, int otherId, int size); 
-void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam);
-
-void SellHamster();
-void BuySpider(int shopID, int teamID);
-void BuyFrog(int shopID);
-void dogskill(int shopID);
-void BuyCheerleader();
-void BuyChicken(int teamID);
-void ActivatePig();
-void BuyChameleon(int teamIdx);
-
-extern int money;
-extern int Playerlife;
+extern int money;	// enemy도 money 따로 써야 함
+extern int playerLife;
 extern int stage;
 extern int storelevel;
 extern int select;
-extern int upgradeShopDiscount;
 
-extern struct unit shop[SHOP_SIZE];
-extern struct unit team[TEAM_SIZE];
-extern struct unit enemy[4];
-extern struct unit fightteam[4];
+extern int upgradeShopDiscount;
+extern bool defeatLastCombat;
+
+void GameInit(void);
+void GameUpdate(void);
+void GameExit(void);
+
+void Swap(int myId, int otherId, int size);
+
+void BuyUnit(struct unit* shop, struct unit* team, int shopID, int teamID);
+
+void BuySpider(struct unit* shop, int shopID);
+void SellHamster(struct unit* team);
+void BuyFrog(struct unit* shop, int shopID);
+
+void BuyDog(struct unit* team, struct unit* shop, int shopID);
+void BuyChicken(struct unit* team, int teamID);
+void BuyCheerleader(struct unit* team);
+
+void ActivatePig(struct unit* team);
+void SellMagpie();
+
+void BuyChameleon(struct unit* team, int teamIdx);

@@ -25,3 +25,6 @@ void elephantskill();
 void snasnapping_turtleskill();
 void viperskill();
 int checkgameover();
+
+//CP_Vector IdxMaxPower(struct unit* arr, int size);
+//CP_Vector IdxMinPower(struct unit* arr, int size);

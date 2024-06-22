@@ -3,8 +3,8 @@
 #include "game.h"
 #include "clickobject.h"
 
-int checkstorelist(int sl);
-void summonshop();
+int LastIdxUnitTier(int sl);
+void SummonShop();
 int isrefreshclicked();
 int isfreezeclicked();
 int isupgradeclicked();

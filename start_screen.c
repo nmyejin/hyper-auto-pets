@@ -36,7 +36,7 @@ void startscreen_update(void)
 	}
 	else if (startscreen() == 2)//start
 	{
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		CP_Engine_SetNextGameState(GameInit, GameUpdate, GameExit);
 		CP_Engine_Run();
 	}
 	CP_Settings_TextSize(20.0f);

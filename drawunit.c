@@ -95,13 +95,13 @@ void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 	Drawstage(stage);
 
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-	if(team[0].type == 0)
+	if(teamPlayer[0].type == 0)
 		CP_Graphics_DrawRect(200, 300, 250, 200); //deckslot1
-	if (team[1].type == 0)
+	if (teamPlayer[1].type == 0)
 		CP_Graphics_DrawRect(450, 300, 250, 200); //deckslot2
-	if (team[2].type == 0)
+	if (teamPlayer[2].type == 0)
 		CP_Graphics_DrawRect(700, 300, 250, 200); //deckslot3
-	if (team[3].type == 0)
+	if (teamPlayer[3].type == 0)
 		CP_Graphics_DrawRect(950, 300, 250, 200); //deckslot1
 
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
@@ -175,7 +175,7 @@ void DrawShop()
 			x = CP_Input_GetMouseX() - 125;
 			y = CP_Input_GetMouseY() - 100;
 		}
-		Drawunit(shop[i-1], x, y);
+		Drawunit(shopPlayer[i-1], x, y);
 	}
 }
 void DrawTeam()
@@ -184,7 +184,7 @@ void DrawTeam()
 	{
 		float x = 200.0f + 250 * (i - 1);
 		float y = 300;
-		Drawunit(team[i - 1], x, y);
+		Drawunit(teamPlayer[i - 1], x, y);
 	}
 }
 
@@ -268,7 +268,7 @@ void drawfightteam(struct unit* abc, float x, float y, int enemyT)
 		float sx = 30;
 		float sy = 30 * (float)i + 40;
 		char buffer[100] = { 0 };
-		sprintf_s(buffer, 100, "%i t: %3.2f %3.2f e: %3.2f %3.2f\n", i, team[i].time, team[i].Maxtime, enemy[i].time, enemy[i].Maxtime);
+		sprintf_s(buffer, 100, "%i t: %3.2f %3.2f e: %3.2f %3.2f\n", i, teamPlayer[i].time, teamPlayer[i].Maxtime, teamEnemy[i].time, teamEnemy[i].Maxtime);
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		CP_Settings_TextSize(20.0f);
 		CP_Font_DrawText(buffer, sx, sy);

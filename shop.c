@@ -5,11 +5,10 @@ int shopInfo[5][5] = {	// cost, rate(unit A, B, C, D)
 	{10, 50, 50,  0,  0},
 	{15, 25, 50, 25,  0},
 	{25, 15, 40, 40,  5},
-	//{30, 10, 35, 45, 10}
-	{30, 0, 0, 0, 100}
+	{30, 10, 35, 45, 10}
 };
 
-int checkstorelist(int sl)
+int LastIdxUnitTier(int sl)
 {
 	if (sl == 1)
 		return frog;
@@ -21,7 +20,7 @@ int checkstorelist(int sl)
 		return chameleon;
 	return 0;
 }
-void summonshop()
+void SummonShop()
 {
 	srand((unsigned int)time(NULL));
 	
@@ -38,18 +37,18 @@ void summonshop()
 			{
 				int storeUnit = -1;
 				if (j == 0)
-					storeUnit = CP_Random_RangeInt(1, checkstorelist(j + 1));
+					storeUnit = CP_Random_RangeInt(1, LastIdxUnitTier(j + 1));
 				else
 				{
 					do
 					{
-						storeUnit = CP_Random_RangeInt(1 + checkstorelist(j), checkstorelist(j + 1));
+						storeUnit = CP_Random_RangeInt(1 + LastIdxUnitTier(j), LastIdxUnitTier(j + 1));
 					} while (storeUnit == 9);
 
 				}
 				
-				shop[i].type = storeUnit;
-				LoadUnitFromFile(&shop[i]);
+				shopPlayer[i].type = storeUnit;
+				LoadUnitFromFile(&shopPlayer[i]);
 				break;
 			}
 		}

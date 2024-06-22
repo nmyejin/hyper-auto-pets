@@ -24,7 +24,7 @@ void combat_update(void)
 	if (T >= 1) {
 		
 		fillin_emptyslot(fightteam, 0);
-		fillin_emptyslot(enemy, 1);
+		fillin_emptyslot(teamEnemy, 1);
 		timer();
 		CheckHit();
 	}
@@ -33,7 +33,7 @@ void combat_update(void)
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
 	combat_interface();
 	drawfightteam(fightteam, 125, 100, 0);
-	drawfightteam(enemy, 875, 700, 1);
+	drawfightteam(teamEnemy, 875, 700, 1);
 	checkcombatover();
 }
 void combat_exit(void)

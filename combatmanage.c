@@ -4,8 +4,8 @@ void summonenemyteam(int whichstage)
 {
 	for (int i = 0; i < 4; i++)
 	{
-		enemy[i].type = 0;
-		LoadUnitFromFile(&enemy[i]);
+		teamEnemy[i].type = 0;
+		LoadUnitFromFile(&teamEnemy[i]);
 	}
 	int buffer[4] = { 0 };
 	for (int j = 0; j < 10; j++)
@@ -28,11 +28,22 @@ void summonenemyteam(int whichstage)
 	{
 		if (buffer[i] > 0) 
 		{
-			enemy[j].type = buffer[i];
-			LoadUnitFromFile(&enemy[j]);
+			teamEnemy[j].type = buffer[i];
+			LoadUnitFromFile(&teamEnemy[j]);
 			j++;
 		}
 	}
+
+	//while (money > 0)
+	//{
+	//	CP_Vector shopInfo = IdxMaxPower(shop, SHOP_SIZE);	// idx, value
+	//	CP_Vector enemyInfo = IdxMinPower(enemy, TEAM_SIZE);
+
+	//	if (shopInfo.y > enemyInfo.y)
+	//	{
+	//		BuyUnit(shopInfo.x, )
+	//	}
+	//}
 }
 void hit()
 {	
@@ -41,8 +52,8 @@ void hit()
 		turtleskill();
 		turtleskillused--;
 	}
-	fightteam[3].life -= enemy[0].att;
-	enemy[0].life -= fightteam[3].att;
+	fightteam[3].life -= teamEnemy[0].att;
+	teamEnemy[0].life -= fightteam[3].att;
 }
 void checkdead()
 {
@@ -51,9 +62,9 @@ void checkdead()
 		{
 			fightteam[i].type = 0;
 		}
-		if (enemy[i].life <= 0)
+		if (teamEnemy[i].life <= 0)
 		{
-			enemy[i].type = 0;
+			teamEnemy[i].type = 0;
 		}
 	}
 }
@@ -117,7 +128,7 @@ void CheckHit()
 		checkdead();
 
 		fightteam[3].time = 0;
-		enemy[0].time = 0;
+		teamEnemy[0].time = 0;
 	}
 }
 
@@ -126,7 +137,7 @@ void timer()
 	for (int i = 0; i < 4; i++)
 	{
 		fightteam[i].time += CP_System_GetDt();
-		enemy[i].time += CP_System_GetDt();
+		teamEnemy[i].time += CP_System_GetDt();
 	}
 }
 
@@ -139,23 +150,25 @@ int checkcombatover()
 	}
 	int e = 0;
 	for (int i = 0; i < 4; i++) {
-		if (enemy[i].type == 0)
+		if (teamEnemy[i].type == 0)
 			e++;
 	}
 
+	defeatLastCombat = 0;
 	if (e == 4 && t == 4)//draw
 	{
 		givemoneystage();
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		CP_Engine_SetNextGameState(GameInit, GameUpdate, GameExit);
 		return 2;
 	}
 	if (t == 4)//lose
 	{
+		defeatLastCombat = 1;
 		givemoneystage();
-		Playerlife -= 1;
+		playerLife -= 1;
 		if (checkgameover())
 			return 0;
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		CP_Engine_SetNextGameState(GameInit, GameUpdate, GameExit);
 		return 0;
 	}
 	if (e == 4)//win
@@ -164,7 +177,7 @@ int checkcombatover()
 		checkgameover();
 		if (checkgameover())
 			return 0;
-		CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+		CP_Engine_SetNextGameState(GameInit, GameUpdate, GameExit);
 
 		return 1;
 	}
@@ -175,7 +188,7 @@ void teamintofightteam()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		fightteam[i] = team[i];
+		fightteam[i] = teamPlayer[i];
 	}
 }
 void givemoneystage()
@@ -222,7 +235,7 @@ void howmanyturtle()
 	turtleskillused = 0;
 	for (int i = 0; i < 4; i++)
 	{
-		if (fightteam[i].type == 7 || enemy[i].type == 7)
+		if (fightteam[i].type == 7 || teamEnemy[i].type == 7)
 			turtleskillused++;
 	}
 }
@@ -233,10 +246,10 @@ void turtleskill()
 	{
 		if (fightteam[3].type == turtle)
 		{
-			fightteam[3].life += enemy[0].att;
-			if (enemy[0].type == turtle)
+			fightteam[3].life += teamEnemy[0].att;
+			if (teamEnemy[0].type == turtle)
 			{
-				enemy[0].life += fightteam[3].att;
+				teamEnemy[0].life += fightteam[3].att;
 				return;
 			}
 			return;
@@ -251,14 +264,14 @@ void skunkskill()
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			enemy[i].life -= 3;
+			teamEnemy[i].life -= 3;
 		}
 	}
-	if (enemy[0].type == skunk && enemy[0].life <= 0)
+	if (teamEnemy[0].type == skunk && teamEnemy[0].life <= 0)
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			team[i].life -= 3;
+			teamPlayer[i].life -= 3;
 		}
 	}
 }
@@ -267,13 +280,13 @@ void owlskill()
 {
 	if (fightteam[3].type == owl)
 	{
-		enemy[3].life -= fightteam[3].att;
-		enemy[0].life += fightteam[3].att;
+		teamEnemy[3].life -= fightteam[3].att;
+		teamEnemy[0].life += fightteam[3].att;
 	}
-	if (enemy[0].type == owl)
+	if (teamEnemy[0].type == owl)
 	{
-		fightteam[0].life -= enemy[0].att;
-		fightteam[3].life += enemy[0].att;
+		fightteam[0].life -= teamEnemy[0].att;
+		fightteam[3].life += teamEnemy[0].att;
 	}
 }
 
@@ -281,9 +294,9 @@ void poisondartfrogskill()
 {
 	if (fightteam[3].type == poisondart_frog && fightteam[3].life <= 0)
 	{
-		enemy[0].life = -99;
+		teamEnemy[0].life = -99;
 	}
-	if (enemy[0].type == poisondart_frog && enemy[0].life <= 0)
+	if (teamEnemy[0].type == poisondart_frog && teamEnemy[0].life <= 0)
 	{
 		fightteam[3].life = -99;
 	}
@@ -293,11 +306,11 @@ void hawkskill()
 {
 	if (fightteam[3].type == hawk)
 	{
-		enemy[1].life -= fightteam[3].att;
+		teamEnemy[1].life -= fightteam[3].att;
 	}
-	if (enemy[0].type == hawk)
+	if (teamEnemy[0].type == hawk)
 	{
-		team[2].life -= enemy[0].att;
+		teamPlayer[2].life -= teamEnemy[0].att;
 	}
 }
 
@@ -307,14 +320,14 @@ void elephantskill()
 	{
 		for (int i = 1; i < 4; i++)
 		{
-			enemy[i].life -= 2;
+			teamEnemy[i].life -= 2;
 		}
 	}
-	if (enemy[0].type == elephant)
+	if (teamEnemy[0].type == elephant)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			team[i].life -= 2;
+			teamPlayer[i].life -= 2;
 		}
 	}
 }
@@ -328,20 +341,20 @@ void viperskill()
 		{
 			r = CP_Random_RangeInt(0, 2);
 		}
-		fightteam[r].att += enemy[0].att;
-		fightteam[r].life += enemy[0].life;
-		enemy[0].life = -99;
+		fightteam[r].att += teamEnemy[0].att;
+		fightteam[r].life += teamEnemy[0].life;
+		teamEnemy[0].life = -99;
 	}
-	if (enemy[0].type == viper)
+	if (teamEnemy[0].type == viper)
 	{
 		int r = CP_Random_RangeInt(1, 3);
 		while (fightteam[r].type != 0)
 		{
 			r = CP_Random_RangeInt(1, 3);
 		}
-		enemy[r].att += team[3].att;
-		enemy[r].life += team[3].life;
-		team[3].life = -99;
+		teamEnemy[r].att += teamPlayer[3].att;
+		teamEnemy[r].life += teamPlayer[3].life;
+		teamPlayer[3].life = -99;
 	}
 }
 
@@ -351,20 +364,55 @@ void snasnapping_turtleskill()
 {
 	if (fightteam[3].type == snapping_turtle)
 	{
-		enemy[0].life = 1;
+		teamEnemy[0].life = 1;
 	}
-	if (enemy[0].type == snapping_turtle)
+	if (teamEnemy[0].type == snapping_turtle)
 	{
-		team[3].life = 1;
+		teamPlayer[3].life = 1;
 	}
 } 
 
 int checkgameover()
 {
-	if (Playerlife <= 0 || stage > 10)
+	if (playerLife <= 0 || stage > 10)
 	{
 		CP_Engine_SetNextGameState(gameover_init, gameover_update, gameover_exit);
 		return 1;
 	}
 	return 0;
 }
+
+//CP_Vector IdxMaxPower(struct unit* arr, int size)
+//{
+//	int idx = 0, value = 0;
+//	for (int i = 0; i < size; i++)\
+//	{
+//		int v = arr[i].att + arr[i].life;
+//		if (value < v)
+//		{
+//			idx = i;
+//			value = v;
+//		}
+//	}
+//
+//	return CP_Vector_Set(idx, value);
+//}
+//
+//CP_Vector IdxMinPower(struct unit* arr, int size)
+//{
+//	int idx = 0, value = 100000;
+//	for (int i = 0; i < size; i++)
+//	{
+//		if (arr[i].type == 0)
+//			return i;
+//
+//		int v = arr[i].att + arr[i].life;
+//		if (value > v)
+//		{
+//			idx = i;
+//			value = v;
+//		}
+//	}
+//
+//	return CP_Vector_Set(idx, value);
+//}

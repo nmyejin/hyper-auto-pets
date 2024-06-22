@@ -1,20 +1,22 @@
 ﻿#include "game.h"
-int money = 100;//0
-int Playerlife = 5;
+
+int money = 100;
+int playerLife = 5;
 int stage = 1;
 int storelevel = 1;
 int select = 0;
-int shuffle = 2; // Ȧ���� ���� �ƴϸ� �󸮱�
+
 int upgradeShopDiscount = 0;
+bool defeatLastCombat = 0;
 
-int pigCount = 0;
+int shuffle = 2;
 
-struct unit shop[SHOP_SIZE];
-struct unit team[TEAM_SIZE];
-struct unit enemy[TEAM_SIZE];
+struct unit shopPlayer[SHOP_SIZE];
+struct unit teamPlayer[TEAM_SIZE];
+struct unit teamEnemy[TEAM_SIZE];
 struct unit fightteam[TEAM_SIZE];
 
-void game_init()
+void GameInit()
 {
 	money += 10;
 
@@ -24,93 +26,100 @@ void game_init()
 	// insert backgroundimage
 	
 	if(shuffle / 2 == 1)
-		summonshop();
+		SummonShop();
 }
 
-void game_update()
+void GameUpdate()
 {
-	//work mode
-	CP_Settings_TextSize(20.0f);
-	char buffer[50] = { 0 };
-	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
-	CP_Font_DrawText(buffer, 30, 30);
-
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
 
+	char buffer[50] = { 0 };
+	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
+	CP_Settings_TextSize(20.0f);
+	CP_Font_DrawText(buffer, 30, 30);
+
+	/* Input mouse */
+	// shop
 	for (int i = 0; i < 3; i++)
 	{
-		if (triggeredrect(200.0f + 250 * (i), 600, 250, 200) && shop[i].type != 0)
+		if (triggeredrect(200.0f + 250 * i, 600, 250, 200) && shopPlayer[i].type != 0)
 		{
-			select = i+1;
+			select = i + 1;
 		}
 	}
 
+	// player team
 	for (int i = 0; i < 4; i++)
 	{
-		if (triggeredrect(200.0f + 250 * (i), 300, 250, 200) && team[i].type != 0)
+		if (triggeredrect(200.0f + 250 * i, 300, 250, 200) && teamPlayer[i].type != 0)
 		{
 			select = i + 4;
 		}
 	}
 
-
-	//When you release the click
-	if (select != 0)
+	/* Release click */
+	// draw sell button
+	if (select >= 4)
 	{
+		drawsellinterface();
+	}
 
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_1))
+	{
+		float x = CP_Input_GetMouseX();
+		float y = CP_Input_GetMouseY();
+		int teamIdx;
+
+		// player team
 		if (select >= 4)
 		{
-			drawsellinterface();
+			teamIdx = select - 4;
+
+			// sell team unit
+			if (checksell() == 1)
+			{
+				money += 1;
+
+				if (teamPlayer[teamIdx].type == hamster)
+					SellHamster(teamPlayer);
+				else if (teamPlayer[teamIdx].type == magpie)
+					SellMagpie();
+				teamPlayer[teamIdx].type = 0;
+			}
+
+			// swap team unit
+			if (300 <= y && y <= 500) {
+				Swap(teamIdx, (int)(x - 200) / 250, 4);
+			}
 		}
-		if (CP_Input_MouseReleased(MOUSE_BUTTON_1))
+		// shop
+		else
 		{
-			float x = CP_Input_GetMouseX();
-			float y = CP_Input_GetMouseY();
-			
-			if (select >= 4)
-			{
-				//if mousepointer sell -> sell
-				if (checksell() == 1)
-				{
-					money += 1;
+			teamIdx = select - 1;
 
-					if (team[select - 4].type == hamster)
-						SellHamster();
-					else if (team[select - 4].type == pig)
-						pigCount--;
-					team[select - 4].type = 0;
-				}
-
-				if (300 <= y && y <= 500) {
-					Callswap(select - 4, (int)(x-200)/250,4);
-				}
-			}
-			else//Drop from shop
+			if (300 <= y && y <= 500 && 3 <= money)
 			{
-				if (300 <= y && y <= 500 && 3 <= money)
-				{
-					BuyUnit(select - 1, ((int)x - 200) / 250, 3, 4);
-				}
+				BuyUnit(shopPlayer, teamPlayer, select - 1, ((int)x - 200) / 250);
 			}
-			select = 0;
 		}
-		
+
+		select = 0;
 	}
-		//Add to our team
-		// set the shop selected slot as  empty
-		// selected = 0
+
+	/* Draw */
+	Drawinterfaces(money, playerLife, stage);
 	DrawTeam();
-	Drawinterfaces(money, Playerlife, stage);
+	DrawShop();
+
 	drawendturn();
 	drawfreeze();
 	drawrefresh();
 	drawupgradestore();
 	
-	DrawShop();
-	
-	if (isrefreshclicked() == 1)
+	/* Click Button */
+	if (isrefreshclicked() == 1 && money > 0)
 	{
-		summonshop();
+		SummonShop();
 		money -= 1;
 	}
 
@@ -129,7 +138,7 @@ void game_update()
 
 	if (isendturnclicked() == 1)
 	{
-		ActivatePig();
+		ActivatePig(teamPlayer);
 
 		money = 0;
 		CP_Engine_SetNextGameState(stage_init, stage_update, stage_exit);
@@ -137,98 +146,77 @@ void game_update()
 	}
 }
 
-void game_exit() 
-{
+void GameExit() { }
 
-}
-
-void Callswap(int myId, int otherId, int size)
+void Swap(int myId, int otherId, int size)
 {
 	struct unit u;
 	
 	if (myId < size && myId >= 0 && otherId >= 0 && otherId < size)
 	{
-		u = team[myId];
-		team[myId] = team[otherId];
-		team[otherId] = u;
+		u = teamPlayer[myId];
+		teamPlayer[myId] = teamPlayer[otherId];
+		teamPlayer[otherId] = u;
 	}
 }
 
-void BuyUnit(int shopID, int teamID, int sizeshop, int sizeteam)
+void BuyUnit(struct unit *shop, struct unit *team, int shopID, int teamID)
 {
-	if ((shopID < 0 || shopID >= sizeshop) || (teamID < 0 || teamID >= sizeteam))
+	if ((shopID < 0 || shopID >= SHOP_SIZE) || (teamID < 0 || teamID >= TEAM_SIZE))
 		return;
 
 	switch (shop[shopID].type)
 	{
 	case spider:
-		BuySpider(shopID, teamID);
-		break;
-
-	case hamster:
-		// �� �� effect
+		BuySpider(shop, shopID);
 		break;
 
 	case sparrow:
 		upgradeShopDiscount--;
-		break;	
-		
-	case pigeon:
 		break;
 
 	case frog:
-		BuyFrog(shopID);
+		BuyFrog(shop, shopID);
 		break;
 
 	case chicken:
-		BuyChicken(teamID);
+		BuyChicken(team, teamID);
 		break;
 
 	case cheerleader:
-		BuyCheerleader();
-		break;
-
-	case pig:
-		pigCount++;
-		break;
-
-	case tiger:
+		BuyCheerleader(team);
 		break;
 
 	case chameleon:
-		BuyChameleon(teamID);
+		BuyChameleon(team, teamID);
 		break;
+
 	case dog:
-		dogskill(shopID);
-	//default:
-	//	return;
+		BuyDog(team, shop, shopID);
 	}
 
 	money -= 3;
-	//money -= shop[shopID].price;
 
 	if (shop[shopID].type != chameleon)
 		team[teamID] = shop[shopID];
 	shop[shopID].type = 0;
 }
 
-void BuySpider(int shopID, int teamID)
+void BuySpider(struct unit* shop, int shopID)
 {
-	int i;
-
-	// ���� ��� ����
-	int stock = 0;
-	for (i = 0; i < SHOP_SIZE; i++)
+	// unit num in shop inventory
+	int num = 0;
+	for (int i = 0; i < SHOP_SIZE; i++)
 	{
 		if (shop[i].type != 0)
-			stock++;
+			num++;
 	}
 
-	// ������ spider�� �ִ� ��� (����� unit�� ����)
-	if (stock == 1)
+	// spider only in shop inventory
+	if (num == 1)
 		return;
 
-	// ���� unit �� �������� �ϳ� �����Ͽ� att, life ���
+	// absorb random unit from shop inventory
 	srand((unsigned int)time(NULL));
 	int randShopID = shopID + (rand() % (SHOP_SIZE - 1)) + 1;
 	if (randShopID >= SHOP_SIZE)
@@ -245,31 +233,30 @@ void BuySpider(int shopID, int teamID)
 	shop[shopID].att += shop[randShopID].att;
 	shop[shopID].life += shop[randShopID].life;
 
-	// ����� unit ����
 	shop[randShopID].type = 0;
 }
 
-void BuyFrog(int shopID)
+void BuyFrog(struct unit* shop, int shopID)
 {
-	// stage��ŭ att, life�� ������
+	// add stage level
 	shop[shopID].att += stage;
 	shop[shopID].life += stage;
 }
 
-void SellHamster()
+void SellHamster(struct unit *team)
 {
 	int i, sellID = select - 4;
 
-	// team ���� �ο�
-	int teamNum = 0;
+	// unit num in team inventory
+	int num = 0;
 	for (i = 0; i < TEAM_SIZE; i++)
 	{
 		if (team[i].type != 0)
-			teamNum++;
+			num++;
 	}
 
-	// team�� hamster�� �ִ� ��� (�ٸ� team unit ����)
-	if (teamNum == 1)
+	// hamster only in team inventory
+	if (num == 1)
 		return;
 
 	srand((unsigned int)time(NULL));
@@ -289,7 +276,7 @@ void SellHamster()
 	team[randTeamID].life += 2;
 }
 
-void BuyCheerleader()
+void BuyCheerleader(struct unit* team)
 {
 	for (int i = 0; i < TEAM_SIZE; i++)
 	{
@@ -301,22 +288,22 @@ void BuyCheerleader()
 	}
 }
 
-void BuyChicken(int teamID)
+void BuyChicken(struct unit* team, int teamID)
 {
 	for (int i = 0; i < TEAM_SIZE; i++)
 	{
-		if (i != teamID && team[i].type == 0)
+		if (i != teamID && teamPlayer[i].type == 0)
 		{
-			team[i].type = 9;
-			LoadUnitFromFile(&team[i]);
+			teamPlayer[i].type = 9;
+			LoadUnitFromFile(&teamPlayer[i]);
 			return;
 		}
 	}
 }
 
-void ActivatePig()
+void ActivatePig(struct unit* team)
 {
-	if (pigCount >= 0 && money > 0)
+	if (money > 0)
 	{
 		for (int i = 0; i < TEAM_SIZE; i++)
 		{
@@ -329,7 +316,7 @@ void ActivatePig()
 	}
 }
 
-void BuyChameleon(int teamIdx)
+void BuyChameleon(struct unit* team, int teamIdx)
 {
 	int maxIdx = teamIdx;
 	int maxValue = 0;
@@ -350,7 +337,7 @@ void BuyChameleon(int teamIdx)
 	team[teamIdx] = team[maxIdx];
 }
 
-void dogskill(int shopID)
+void BuyDog(struct unit* team, struct unit* shop, int shopID)
 {
 	//check dog is exist
 	int buff = 0;
@@ -373,4 +360,10 @@ void dogskill(int shopID)
 			}
 		}
 	}
+}
+
+void SellMagpie()
+{
+	if (defeatLastCombat == 1)
+		money += 5;
 }
