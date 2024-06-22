@@ -99,7 +99,7 @@ void GameUpdate()
 		{
 			teamIdx = select - 1;
 
-			if (300 <= y && y <= 500 && 3 <= money)
+			if (300 <= y && y <= 500)
 			{
 				BuyUnit(shopPlayer, teamPlayer, teamIdx, ((int)x - 200) / 250, &money);
 			}
@@ -119,13 +119,13 @@ void GameUpdate()
 	drawupgradestore();
 	
 	/* Click Button */
-	if (isrefreshclicked() == 1 && money > 0)
+	if (IsRefreshClicked() == 1 && money > 0)
 	{
 		SummonShop(shopPlayer);
 		money -= 1;
 	}
 
-	if (isfreezeclicked() == 1)
+	if (IsFreezeClicked() == 1)
 	{
 		if (shuffle == 2)
 			shuffle += 2;
@@ -133,12 +133,12 @@ void GameUpdate()
 			shuffle -= 2;
 	}
 
-	if (isupgradeclicked() == 1)
+	if (IsUpgradeClicked() == 1)
 	{
 		UpgradeShop();
 	}
 
-	if (isendturnclicked() == 1)
+	if (IsEndturnClicked() == 1)
 	{
 		ActivatePig(teamPlayer, &money);
 
@@ -164,7 +164,9 @@ void Swap(int myId, int otherId, int size)
 
 void BuyUnit(struct unit *shop, struct unit *team, int shopID, int teamID, int *gold)
 {
-	if ((shopID < 0 || shopID >= SHOP_SIZE) || (teamID < 0 || teamID >= TEAM_SIZE))
+	if (*gold < 3
+		|| (shopID < 0 || shopID >= SHOP_SIZE) 
+		|| (teamID < 0 || teamID >= TEAM_SIZE))
 		return;
 
 	bool notBuy = false;
@@ -210,7 +212,7 @@ void BuyUnit(struct unit *shop, struct unit *team, int shopID, int teamID, int *
 
 void SellUnit(struct unit* team, int teamIdx, int* gold)
 {
-	gold++;
+	(*gold)++;
 
 	if (team[teamIdx].type == hamster)
 		SellHamster(team);
@@ -310,10 +312,10 @@ void BuyChicken(struct unit* team, int teamID)
 {
 	for (int i = 0; i < TEAM_SIZE; i++)
 	{
-		if (i != teamID && teamPlayer[i].type == 0)
+		if (i != teamID && team[i].type == 0)
 		{
-			teamPlayer[i].type = 9;
-			LoadUnitFromFile(&teamPlayer[i]);
+			team[i].type = 9;
+			LoadUnitFromFile(&team[i]);
 			return;
 		}
 	}

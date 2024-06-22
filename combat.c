@@ -12,7 +12,7 @@ void combat_init(void)
 	CP_System_SetWindowSize(2000, 1000);
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
 	teamintofightteam();
-	summonenemyteam(stage);
+	SummonTeamEnemy(stage);
 	fillin_emptyslot(fightteam, 0);
 	T = 0;
 	//howmanyturtle();

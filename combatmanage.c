@@ -5,94 +5,32 @@ int moneyEnemy;
 struct unit teamEnemy[TEAM_SIZE];
 struct unit shopEnemy[SHOP_SIZE];
 
-void summonenemyteam(int whichstage)
+void SummonTeamEnemy(int whichstage)
 {
-	for (int i = 0; i < 4; i++)
+	moneyEnemy = 10;
+	SummonShop(shopEnemy);
+
+	while (moneyEnemy > 0)
 	{
-		teamEnemy[i].type = 0;
-		LoadUnitFromFile(&teamEnemy[i]);
-	}
-	int buffer[4] = { 0 };
-	for (int j = 0; j < 10; j++)
-	{
-		for (int i = 0; i < 4; i++)
+		CP_Vector shopInfo = IdxMaxPower(shopEnemy, SHOP_SIZE);	// pair(idx, value)
+		CP_Vector enemyInfo = IdxMinPower(teamEnemy, TEAM_SIZE);
+
+		if (shopInfo.y > enemyInfo.y)
 		{
-			if (whichstage == j+1)
-			{
-				buffer[i] = CP_Random_RangeInt(j*2, (j * 2)+2);
-				--buffer[i];
-			}
+			if (teamEnemy[(int)enemyInfo.x].type != 0)
+				SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
+			BuyUnit(shopEnemy, teamEnemy, (int)shopInfo.x, (int)enemyInfo.x, &moneyEnemy);
 		}
-	}
-	if (buffer[0] <= 0 && buffer[1] <= 0 && buffer[2] <= 0 && buffer[3] <= 0)
-	{
-		buffer[0] = 1;
-	}
-	int j = 0;
-	int a, dogbuff = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (buffer[i] > 0)
+		else if (moneyEnemy >= 4)
 		{
-			teamEnemy[j].type = buffer[i];
-			LoadUnitFromFile(&teamEnemy[j]);
-			switch (teamEnemy[j].type)
-			{
-			case spider:
-				teamEnemy[j].att += whichstage + CP_Random_RangeInt(whichstage, whichstage * 2);
-				teamEnemy[j].life += whichstage + CP_Random_RangeInt(whichstage, whichstage * 2);
-				break;
-			case frog:
-				teamEnemy[j].att += whichstage;
-				teamEnemy[j].life += whichstage;
-			case dog:
-				a = j;
-				while (a > 0)
-				{
-					if (teamEnemy[a - 1].att > teamEnemy[j].att) {
-						dogbuff++;
-						a--;
-					}
-				}
-				break;
-			case cheerleader:
-				a = j;
-				while (a > 0) {
-					teamEnemy[a - 1].att += 2;
-					teamEnemy[a - 1].life += 2;
-					a--;
-				}
-			}
-			j++;
+			moneyEnemy--;
+			SummonShop(shopEnemy);
 		}
+		else
+			break;
 	}
-
-	//moneyEnemy = 10;
-	//SummonShop(shopEnemy);
-
-	//while (moneyEnemy > 0)
-	//{
-	//	CP_Vector shopInfo = IdxMaxPower(shopEnemy, SHOP_SIZE);	// pair(idx, value)
-	//	CP_Vector enemyInfo = IdxMinPower(teamEnemy, TEAM_SIZE);
-
-	//	if (shopInfo.y > enemyInfo.y)
-	//	{
-	//		if (teamEnemy[(int)enemyInfo.x].type != 0)
-	//			SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
-	//		BuyUnit(shopEnemy, teamEnemy, (int)shopInfo.x, (int)enemyInfo.x, &moneyEnemy);
-	//	}
-	//	else
-	//	{
-	//		moneyEnemy--;
-	//		SummonShop(shopEnemy);
-	//	}
-	//}
-
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	BuyUnit(shopEnemy, teamEnemy, 0, i, &moneyEnemy);
-	//}
 }
+
 void hit()
 {	
 	snasnapping_turtleskill();
@@ -100,6 +38,7 @@ void hit()
 	fightteam[3].life -= teamEnemy[0].att;
 	teamEnemy[0].life -= fightteam[3].att;
 }
+
 void checkdead()
 {
 	for (int i = 0; i < 4; i++) {
@@ -113,7 +52,6 @@ void checkdead()
 		}
 	}
 }
-
 
 // Todo team type [1, 0, 0, 1] => [0, 0, 1, 1] 
 void fillin_emptyslot(struct unit* abc, int enemyT)// enemy 1 team 0
@@ -478,9 +416,12 @@ int checkgameover()
 
 CP_Vector IdxMaxPower(struct unit* arr, int size)
 {
-	int idx = 0, value = 0;
-	for (int i = 0; i < size; i++)\
+	int idx = 0, value = -1;
+	for (int i = 0; i < size; i++)
 	{
+		if (arr[i].type == 0)
+			continue;
+
 		int v = arr[i].att + arr[i].life;
 		if (value < v)
 		{

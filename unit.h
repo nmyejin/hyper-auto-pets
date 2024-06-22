@@ -15,7 +15,7 @@ enum unitlist
 	dog = 6,
 	turtle = 7,
 	chicken = 8,
-	chick = 9,	// �߰� (������ �߸� �ȵ�)
+	chick = 9,	// Do not appear in the shop
 	cheerleader = 10,
 	//C
 	poisondart_frog = 11,
@@ -34,6 +34,7 @@ enum unitlist
 
 struct unit
 {
+	// bool exist를 추가해서 combat에서 사용하면 따로 fightteam 필요 없음
 	double time;
 	double Maxtime;
 	enum unitlist type;

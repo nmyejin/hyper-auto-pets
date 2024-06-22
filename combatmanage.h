@@ -6,7 +6,7 @@
 #include "combatmanage.h"
 #include "gameover.h"
 
-void summonenemyteam(int stage);
+void SummonTeamEnemy(int stage);
 void hit();
 void checkdead();
 void fillin_emptyslot(struct unit* abc, int enemyT);

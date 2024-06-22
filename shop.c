@@ -1,26 +1,35 @@
 #include "shop.h"
 
-int shopInfo[5][5] = {	// cost, rate(unit A, B, C, D)
-	{ 0,100,  0,  0,  0},
-	{10, 50, 50,  0,  0},
-	{15, 25, 50, 25,  0},
-	{25, 15, 40, 40,  5},
-	//{30, 10, 35, 45, 10}
-	{30, 0, 0, 0, 100}
+int shopInfo[MAX_SHOP_LEVEL][1 + MAX_UNIT_TIER] = {
+	// cost, rate(unit A, B, C, D)
+	//{ 0, 100,  0,  0,  0},
+	//{10,  50, 50,  0,  0},
+	//{15,  25, 50, 25,  0},
+	//{25,  15, 40, 40,  5},
+	//{30,  10, 35, 45, 10}
+	{ 0, 100,  0,  0,  0},
+	{1,  0, 100,  0,  0},
+	{1,  0, 0, 100,  0},
+	{1,  0, 0, 0,  100},
+	{1,  10, 35, 45, 10}
 };
 
 int LastIdxUnitTier(int sl)
 {
-	if (sl == 1)
+	switch (sl) {
+	case 1:
 		return frog;
-	if (sl == 2)
+	case 2:
 		return cheerleader;
-	if (sl == 3)
+	case 3:
 		return magpie;
-	if (sl == 4)
+	case 4:
 		return chameleon;
-	return 0;
+	default:
+		return 0;
+	}
 }
+
 void SummonShop(struct unit *shop)
 {
 	srand((unsigned int)time(NULL));
@@ -30,7 +39,7 @@ void SummonShop(struct unit *shop)
 		int randNum = rand() % 100;
 		int threshold = 0;
 
-		for (int j = 0; j < 4; j++)	// ���� ����
+		for (int j = 0; j < MAX_UNIT_TIER; j++)
 		{
 			threshold += shopInfo[storelevel - 1][j + 1];
 
@@ -45,7 +54,6 @@ void SummonShop(struct unit *shop)
 					{
 						storeUnit = CP_Random_RangeInt(1 + LastIdxUnitTier(j), LastIdxUnitTier(j + 1));
 					} while (storeUnit == 9);
-
 				}
 				
 				shop[i].type = storeUnit;
@@ -56,28 +64,28 @@ void SummonShop(struct unit *shop)
 	}
 }
 
-int isrefreshclicked()
+bool IsRefreshClicked()
 {
 	if (clickedrect(1200, 800, 300, 200) == 1)
 		return 1;
 	return 0;
 }
 
-int isfreezeclicked()
+bool IsFreezeClicked()
 {
 	if (clickedrect(1525, 800, 200, 200) == 1)
 		return 1;	
 	return 0;
 }
 
-int isupgradeclicked()
+bool IsUpgradeClicked()
 {
 	if (clickedrect(200, 840, 250, 100) == 1)
 		return 1;
 	return 0;
 }
 
-int isendturnclicked()
+bool IsEndturnClicked()
 {
 	if (clickedrect(1750, 800, 200, 200) == 1)
 		return 1;
