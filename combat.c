@@ -15,7 +15,7 @@ void combat_init(void)
 	summonenemyteam(stage);
 	fillin_emptyslot(fightteam, 0);
 	T = 0;
-	howmanyturtle();
+	//howmanyturtle();
 	//heart = CP_Image_Load("./Assets/heart.ppm");
 	//att = CP_Image_Load("./Assets/att.ppm");
 }

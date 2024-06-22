@@ -101,7 +101,7 @@ void GameUpdate()
 
 			if (300 <= y && y <= 500 && 3 <= money)
 			{
-				BuyUnit(shopPlayer, teamPlayer, select - 1, ((int)x - 200) / 250, &money);
+				BuyUnit(shopPlayer, teamPlayer, teamIdx, ((int)x - 200) / 250, &money);
 			}
 		}
 

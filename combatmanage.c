@@ -7,39 +7,68 @@ struct unit shopEnemy[SHOP_SIZE];
 
 void summonenemyteam(int whichstage)
 {
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	teamEnemy[i].type = 0;
-	//	LoadUnitFromFile(&teamEnemy[i]);
-	//}
-	//int buffer[4] = { 0 };
-	//for (int j = 0; j < 10; j++)
-	//{
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		if (whichstage == j+1)
-	//		{
-	//			buffer[i] = CP_Random_RangeInt(j*2, (j * 2)+2);
-	//			--buffer[i];
-	//		}
-	//	}
-	//}
-	//if (buffer[0] <= 0 && buffer[1] <= 0 && buffer[2] <= 0 && buffer[3] <= 0)
-	//{
-	//	buffer[0] = 1;
-	//}
-	//int j = 0;
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	if (buffer[i] > 0) 
-	//	{
-	//		teamEnemy[j].type = buffer[i];
-	//		LoadUnitFromFile(&teamEnemy[j]);
-	//		j++;
-	//	}
-	//}
-	moneyEnemy = 10;
-	SummonShop(shopEnemy);
+	for (int i = 0; i < 4; i++)
+	{
+		teamEnemy[i].type = 0;
+		LoadUnitFromFile(&teamEnemy[i]);
+	}
+	int buffer[4] = { 0 };
+	for (int j = 0; j < 10; j++)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (whichstage == j+1)
+			{
+				buffer[i] = CP_Random_RangeInt(j*2, (j * 2)+2);
+				--buffer[i];
+			}
+		}
+	}
+	if (buffer[0] <= 0 && buffer[1] <= 0 && buffer[2] <= 0 && buffer[3] <= 0)
+	{
+		buffer[0] = 1;
+	}
+	int j = 0;
+	int a, dogbuff = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (buffer[i] > 0)
+		{
+			teamEnemy[j].type = buffer[i];
+			LoadUnitFromFile(&teamEnemy[j]);
+			switch (teamEnemy[j].type)
+			{
+			case spider:
+				teamEnemy[j].att += whichstage + CP_Random_RangeInt(whichstage, whichstage * 2);
+				teamEnemy[j].life += whichstage + CP_Random_RangeInt(whichstage, whichstage * 2);
+				break;
+			case frog:
+				teamEnemy[j].att += whichstage;
+				teamEnemy[j].life += whichstage;
+			case dog:
+				a = j;
+				while (a > 0)
+				{
+					if (teamEnemy[a - 1].att > teamEnemy[j].att) {
+						dogbuff++;
+						a--;
+					}
+				}
+				break;
+			case cheerleader:
+				a = j;
+				while (a > 0) {
+					teamEnemy[a - 1].att += 2;
+					teamEnemy[a - 1].life += 2;
+					a--;
+				}
+			}
+			j++;
+		}
+	}
+
+	//moneyEnemy = 10;
+	//SummonShop(shopEnemy);
 
 	//while (moneyEnemy > 0)
 	//{
@@ -59,18 +88,15 @@ void summonenemyteam(int whichstage)
 	//	}
 	//}
 
-	for (int i = 0; i < 4; i++)
-	{
-		BuyUnit(shopEnemy, teamEnemy, 0, i, &moneyEnemy);
-	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	BuyUnit(shopEnemy, teamEnemy, 0, i, &moneyEnemy);
+	//}
 }
 void hit()
 {	
 	snasnapping_turtleskill();
-	if (turtleskillused != 0) {
-		turtleskill();
-		turtleskillused--;
-	}
+
 	fightteam[3].life -= teamEnemy[0].att;
 	teamEnemy[0].life -= fightteam[3].att;
 }
@@ -138,12 +164,54 @@ void CheckHit()
 	if (1 <= fightteam[3].time)
 	{
 		hit();
-		skunkskill();
-		owlskill();
-		poisondartfrogskill();
-		hawkskill();
-		elephantskill();
-		viperskill();
+		switch (fightteam[3].type)
+		{
+		case turtle:
+			turtleskill(&fightteam[3], &teamEnemy[0]);
+			break;
+		case skunk:
+			skunkskill(&teamPlayer[3], &teamEnemy[0], 1);
+			break;
+		case owl:
+			owlskill();
+			break;
+		case poisondart_frog:
+			poisondartfrogskill(&teamEnemy[0]);
+			break;
+		case hawk:
+			hawkskill();
+			break;
+		case elephant:
+			elephantskill();
+			break;
+		case viper:
+			viperskill();
+		}
+
+		switch (teamEnemy[0].type)
+		{
+		case turtle:
+			turtleskill(&teamEnemy[0], &fightteam[3]);
+			break;
+		case skunk:
+			skunkskill(&teamEnemy[0], &fightteam[3], 0);
+			break;
+		case owl:
+			owlskill();
+			break;
+		case poisondart_frog:
+			poisondartfrogskill(&fightteam[3]);
+			break;
+		case hawk:
+			hawkskill();
+			break;
+		case elephant:
+			elephantskill();
+			break;
+		case viper:
+			viperskill();
+		}
+
 		checkdead();
 
 		fightteam[3].time = 0;
@@ -249,76 +317,65 @@ void givemoneystage()
 
 }
 
-void howmanyturtle()
+void turtleskill(struct unit* turtle, struct unit* object)
 {
-	turtleskillused = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (fightteam[i].type == 7 || teamEnemy[i].type == 7)
-			turtleskillused++;
-	}
+	turtle->life += object->att / 2;
 }
 
-void turtleskill()
+void skunkskill(struct unit* skunk, struct unit* object, int tore)//1= skunk is team
 {
-	for (int i = 0; i < 4; i++)
-	{
-		if (fightteam[3].type == turtle)
-		{
-			fightteam[3].life += teamEnemy[0].att;
-			if (teamEnemy[0].type == turtle)
+	if (skunk->life <= 0) {
+		if (tore == 1) {
+			for (int i = 1; i < 4; i++)
 			{
-				teamEnemy[0].life += fightteam[3].att;
-				return;
+				object[i].life -= 3;
 			}
-			return;
 		}
-
-	}
-}
-
-void skunkskill()
-{
-	if (fightteam[3].type == skunk && fightteam[3].life <= 0)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			teamEnemy[i].life -= 3;
-		}
-	}
-	if (teamEnemy[0].type == skunk && teamEnemy[0].life <= 0)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			teamPlayer[i].life -= 3;
+		if (tore == 0) {
+			for (int i = 0; i < 3; i++)
+			{
+				object[i].life -= 3;
+			}
 		}
 	}
 }
 
 void owlskill()
 {
+	int last;
 	if (fightteam[3].type == owl)
 	{
-		teamEnemy[3].life -= fightteam[3].att;
-		teamEnemy[0].life += fightteam[3].att;
+		last = 3;
+		while (teamEnemy[last].type == 0) {
+			last--;
+		}
+		if (last == 0)
+		{
+			return;
+		}
+		else {
+			teamEnemy[last].life -= fightteam[3].att;
+			teamEnemy[0].life += fightteam[3].att;
+		}
 	}
 	if (teamEnemy[0].type == owl)
 	{
-		fightteam[0].life -= teamEnemy[0].att;
+		last = 0;
+		while (teamEnemy[last].type == 0) {
+			last++;
+		}
+		if (last == 3)
+		{
+			return;
+		}
+		fightteam[last].life -= teamEnemy[0].att;
 		fightteam[3].life += teamEnemy[0].att;
 	}
 }
 
-void poisondartfrogskill()
+void poisondartfrogskill(struct unit* object)
 {
-	if (fightteam[3].type == poisondart_frog && fightteam[3].life <= 0)
-	{
-		teamEnemy[0].life = -99;
-	}
-	if (teamEnemy[0].type == poisondart_frog && teamEnemy[0].life <= 0)
-	{
-		fightteam[3].life = -99;
-	}
+	object->life = -99;
 }
 
 void hawkskill()
@@ -353,10 +410,28 @@ void elephantskill()
 
 void viperskill()
 {
+	int talone = 0;
+	int ealone = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (fightteam[i].type != 0)
+			talone++;
+		if (teamEnemy[i].type != 0)
+			ealone++;
+	}
+	if (talone == 1) {
+		fightteam[3].att = 100;
+		return;
+	}
+	if (ealone == 1) {
+		teamEnemy[0].att = 100;
+		return;
+	}
+
 	if (fightteam[3].type == viper)
 	{
 		int r = CP_Random_RangeInt(0, 2);
-		while (fightteam[r].type != 0) 
+		while (fightteam[r].type == 0)
 		{
 			r = CP_Random_RangeInt(0, 2);
 		}
@@ -367,13 +442,13 @@ void viperskill()
 	if (teamEnemy[0].type == viper)
 	{
 		int r = CP_Random_RangeInt(1, 3);
-		while (fightteam[r].type != 0)
+		while (fightteam[r].type == 0)
 		{
 			r = CP_Random_RangeInt(1, 3);
 		}
-		teamEnemy[r].att += teamPlayer[3].att;
-		teamEnemy[r].life += teamPlayer[3].life;
-		teamPlayer[3].life = -99;
+		teamEnemy[r].att += fightteam[3].att;
+		teamEnemy[r].life += fightteam[3].life;
+		fightteam[3].life = -99;
 	}
 }
 
@@ -383,11 +458,11 @@ void snasnapping_turtleskill()
 {
 	if (fightteam[3].type == snapping_turtle)
 	{
-		teamEnemy[0].life = 1;
+		teamEnemy[0].att = 3;
 	}
 	if (teamEnemy[0].type == snapping_turtle)
 	{
-		teamPlayer[3].life = 1;
+		fightteam[3].att = 3;
 	}
 } 
 
