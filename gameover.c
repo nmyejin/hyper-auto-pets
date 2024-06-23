@@ -7,7 +7,7 @@ void gameover_init(void)
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
 	if (stage == 10)
 		result = 2;
-	else if (Playerlife <= 0)
+	else if (playerLife <= 0)
 		result = 1;
 }
 void gameover_update(void)

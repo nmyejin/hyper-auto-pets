@@ -20,6 +20,8 @@ void drawrefresh();
 void drawupgradestore();
 void drawsellinterface();
 
+void ShowUnitDescription(struct unit* unit);
+
 //combat
 void drawunitlife(int life, float unitx, float unity);
 void drawunitatt(int att, float unitx, float unity);

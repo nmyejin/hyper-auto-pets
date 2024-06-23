@@ -9,4 +9,4 @@ void combat_init(void);
 void combat_update(void);
 void combat_exit(void);
 
-int turtleskillused;
+//int turtleskillused;

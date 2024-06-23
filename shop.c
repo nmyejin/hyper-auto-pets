@@ -1,27 +1,31 @@
 #include "shop.h"
 
-int shopInfo[5][5] = {	// cost, rate(unit A, B, C, D)
-	{ 0,100,  0,  0,  0},
-	{10, 50, 50,  0,  0},
-	{15, 25, 50, 25,  0},
-	{25, 15, 40, 40,  5},
-	//{30, 10, 35, 45, 10}
-	{30, 0, 0, 0, 100}
+int shopInfo[MAX_SHOP_LEVEL][1 + MAX_UNIT_TIER] = {
+	// cost, rate(unit A, B, C, D)
+	{ 0, 100,  0,  0,  0},
+	{10,  50, 50,  0,  0},
+	{15,  25, 50, 25,  0},
+	{25,  15, 40, 40,  5},
+	{30,  10, 35, 45, 10}
 };
 
-int checkstorelist(int sl)
+int LastIdxUnitTier(int sl)
 {
-	if (sl == 1)
-		return frog;
-	if (sl == 2)
-		return cheerleader;
-	if (sl == 3)
-		return magpie;
-	if (sl == 4)
-		return chameleon;
-	return 0;
+	switch (sl) {
+	case 1:
+		return Frog;
+	case 2:
+		return Cheerleader;
+	case 3:
+		return Magpie;
+	case 4:
+		return Chameleon;
+	default:
+		return 0;
+	}
 }
-void summonshop()
+
+void SummonShop(struct unit *shop, int shopLv)
 {
 	srand((unsigned int)time(NULL));
 	
@@ -30,54 +34,54 @@ void summonshop()
 		int randNum = rand() % 100;
 		int threshold = 0;
 
-		for (int j = 0; j < 4; j++)	// ���� ����
+		for (int j = 0; j < MAX_UNIT_TIER; j++)
 		{
-			threshold += shopInfo[storelevel - 1][j + 1];
+			threshold += shopInfo[shopLv - 1][j + 1];
 
 			if (randNum < threshold)
 			{
 				int storeUnit = -1;
 				if (j == 0)
-					storeUnit = CP_Random_RangeInt(1, checkstorelist(j + 1));
+					storeUnit = CP_Random_RangeInt(1, LastIdxUnitTier(j + 1));
 				else
 				{
 					do
 					{
-						storeUnit = CP_Random_RangeInt(1 + checkstorelist(j), checkstorelist(j + 1));
+						storeUnit = CP_Random_RangeInt(1 + LastIdxUnitTier(j), LastIdxUnitTier(j + 1));
 					} while (storeUnit == 9);
-
 				}
 				
-				shop[i].type = storeUnit;
-				LoadUnitFromFile(&shop[i]);
+				/*shop[i].type = storeUnit;
+				LoadUnitFromFile(&shop[i]);*/
+				InitializeUnit(&shop[i], storeUnit);
 				break;
 			}
 		}
 	}
 }
 
-int isrefreshclicked()
+bool IsRefreshClicked()
 {
 	if (clickedrect(1200, 800, 300, 200) == 1)
 		return 1;
 	return 0;
 }
 
-int isfreezeclicked()
+bool IsFreezeClicked()
 {
 	if (clickedrect(1525, 800, 200, 200) == 1)
 		return 1;	
 	return 0;
 }
 
-int isupgradeclicked()
+bool IsUpgradeClicked()
 {
 	if (clickedrect(200, 840, 250, 100) == 1)
 		return 1;
 	return 0;
 }
 
-int isendturnclicked()
+bool IsEndturnClicked()
 {
 	if (clickedrect(1750, 800, 200, 200) == 1)
 		return 1;
@@ -86,10 +90,10 @@ int isendturnclicked()
 
 void UpgradeShop()
 {
-	int cost = shopInfo[storelevel][0] + upgradeShopDiscount;
-	if (storelevel < 5 && money >= cost)
+	int cost = shopInfo[shopLevel][0] + upgradeShopDiscount;
+	if (shopLevel < 5 && money >= cost)
 	{
 		money -= cost;
-		storelevel++;
+		shopLevel++;
 	}
 }

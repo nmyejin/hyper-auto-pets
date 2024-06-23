@@ -3,11 +3,12 @@
 #include "game.h"
 #include "clickobject.h"
 
-int checkstorelist(int sl);
-void summonshop();
-int isrefreshclicked();
-int isfreezeclicked();
-int isupgradeclicked();
-int isendturnclicked();
+int LastIdxUnitTier(int sl);
+void SummonShop(struct unit* shop, int shopLv);
+
+bool IsRefreshClicked();
+bool IsFreezeClicked();
+bool IsUpgradeClicked();
+bool IsEndturnClicked();
 
 void UpgradeShop();

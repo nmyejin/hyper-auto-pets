@@ -1,44 +1,53 @@
 #pragma once
+
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <stdbool.h>
+#include <string.h>
 
 enum unitlist
 {
 	//A
-	spider = 1,
-	hamster = 2,
-	pigeon = 3,
-	sparrow = 4,
-	frog = 5,
+	Spider = 1,
+	Hamster,
+	Pigeon,
+	Sparrow,
+	Frog = 5,
+
 	//B
-	dog = 6,
-	turtle = 7,
-	chicken = 8,
-	chick = 9,	// �߰� (������ �߸� �ȵ�)
-	cheerleader = 10,
+	Dog = 6,
+	Turtle,
+	Chicken,
+	Chick = 9,	// Do not appear in the shop
+	Cheerleader = 10,
+
 	//C
-	poisondart_frog = 11,
-	owl,
-	pig,
-	tiger,
-	skunk,
-	magpie = 16,
+	PoisonDartFrog = 11,
+	Owl,
+	Pig,
+	Tiger,
+	Skunk,
+	Magpie = 16,
+
 	//D
-	hawk = 17,
-	viper,
-	elephant,
-	snapping_turtle,
-	chameleon = 21
+	Hawk = 17,
+	Viper,
+	Elephant,
+	SnappingTurtle,
+	Chameleon = 21
 };
 
 struct unit
 {
+	bool visible;
 	double time;
 	double Maxtime;
 	enum unitlist type;
 	int Maxhp, originalatt;
 	int att, life;
+	//char skill;
+	char description[150];
 };
 
+void InitializeUnit(struct unit* unit, enum unitlist ul);
 void LoadUnitFromFile(struct unit* myunit);
