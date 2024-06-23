@@ -26,14 +26,14 @@ void SummonTeamEnemy(int whichstage)
 
 	while (moneyEnemy > 0)
 	{
-		CP_Vector shopInfo = IdxMaxPower(shopEnemy, SHOP_SIZE);	// pair(idx, value)
+		CP_Vector shopEnemyInfo = IdxMaxPower(shopEnemy, SHOP_SIZE);	// pair(idx, value)
 		CP_Vector enemyInfo = IdxMinPower(teamEnemy, TEAM_SIZE);
 
-		if (shopInfo.y >= enemyInfo.y)
+		if (shopEnemyInfo.y >= enemyInfo.y)
 		{
 			if (teamEnemy[(int)enemyInfo.x].type != 0)
 				SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
-			BuyUnit(shopEnemy, teamEnemy, (int)shopInfo.x, (int)enemyInfo.x, &moneyEnemy);
+			BuyUnit(shopEnemy, teamEnemy, (int)shopEnemyInfo.x, (int)enemyInfo.x, &moneyEnemy);
 		}
 		else if (moneyEnemy >= 4)
 		{
