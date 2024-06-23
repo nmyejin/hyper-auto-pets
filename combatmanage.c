@@ -2,20 +2,34 @@
 
 int moneyEnemy;
 
+int periodUpgradeShopEnemy = FINAL_STAGE / MAX_SHOP_LEVEL;
+int shopLevelEnemy = 0;
+
 struct unit teamEnemy[TEAM_SIZE];
 struct unit shopEnemy[SHOP_SIZE];
 
 void SummonTeamEnemy(int whichstage)
 {
+	static int stageBefore = 0;
+
+	for (int i = 0; i < TEAM_SIZE; i++)
+	{
+		if (teamEnemy[i].type != 0 && teamEnemy[i].visible == false)
+			teamEnemy[i].visible = true;
+	}
+
 	moneyEnemy = 10;
-	SummonShop(shopEnemy);
+
+	if (stageBefore != stage && stage % periodUpgradeShopEnemy == 1)
+		shopLevelEnemy++;
+	SummonShop(shopEnemy, shopLevelEnemy);
 
 	while (moneyEnemy > 0)
 	{
 		CP_Vector shopInfo = IdxMaxPower(shopEnemy, SHOP_SIZE);	// pair(idx, value)
 		CP_Vector enemyInfo = IdxMinPower(teamEnemy, TEAM_SIZE);
 
-		if (shopInfo.y > enemyInfo.y)
+		if (shopInfo.y >= enemyInfo.y)
 		{
 			if (teamEnemy[(int)enemyInfo.x].type != 0)
 				SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
@@ -24,11 +38,14 @@ void SummonTeamEnemy(int whichstage)
 		else if (moneyEnemy >= 4)
 		{
 			moneyEnemy--;
-			SummonShop(shopEnemy);
+			SummonShop(shopEnemy, shopLevelEnemy);
 		}
-		else
+		
+		if (moneyEnemy < 4)
 			break;
 	}
+
+	stageBefore = stage;
 }
 
 void hit()
@@ -44,11 +61,11 @@ void checkdead()
 	for (int i = 0; i < 4; i++) {
 		if (fightteam[i].life <= 0)
 		{
-			fightteam[i].type = 0;
+			fightteam[i].visible = 0;
 		}
 		if (teamEnemy[i].life <= 0)
 		{
-			teamEnemy[i].type = 0;
+			teamEnemy[i].visible = 0;
 		}
 	}
 }
@@ -56,17 +73,17 @@ void checkdead()
 // Todo team type [1, 0, 0, 1] => [0, 0, 1, 1] 
 void fillin_emptyslot(struct unit* abc, int enemyT)// enemy 1 team 0
 {
-	if (abc[1].type == 0 && abc[2].type == 0)
+	if (abc[1].visible == 0 && abc[2].visible == 0)
 	{
 		if (enemyT == 0) // team
 		{
 			abc[2] = abc[0];
-			abc[0].type = 0;
+			abc[0].visible = 0;
 		}
 		else if (enemyT == 1) // enemy
 		{
 			abc[1] = abc[3];
-			abc[3].type = 0;
+			abc[3].visible = 0;
 		}
 	}
 
@@ -74,11 +91,11 @@ void fillin_emptyslot(struct unit* abc, int enemyT)// enemy 1 team 0
 	{
 		for (int i = 3; i > 0; i--)
 		{
-			if (abc[i].type == 0)
+			if (abc[i].visible == 0)
 			{
 				abc[i] = abc[i - 1];
 				abc[i].time = 0;
-				abc[i - 1].type = 0;
+				abc[i - 1].visible = 0;
 
 			}
 		}
@@ -87,11 +104,11 @@ void fillin_emptyslot(struct unit* abc, int enemyT)// enemy 1 team 0
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			if (abc[i].type == 0)
+			if (abc[i].visible == 0)
 			{
 				abc[i] = abc[i + 1];
 				abc[i].time = 0;
-				abc[i + 1].type = 0;
+				abc[i + 1].visible = 0;
 			}
 		}
 	}
@@ -104,49 +121,49 @@ void CheckHit()
 		hit();
 		switch (fightteam[3].type)
 		{
-		case turtle:
+		case Turtle:
 			turtleskill(&fightteam[3], &teamEnemy[0]);
 			break;
-		case skunk:
+		case Skunk:
 			skunkskill(&teamPlayer[3], &teamEnemy[0], 1);
 			break;
-		case owl:
+		case Owl:
 			owlskill();
 			break;
-		case poisondart_frog:
+		case PoisonDartFrog:
 			poisondartfrogskill(&teamEnemy[0]);
 			break;
-		case hawk:
+		case Hawk:
 			hawkskill();
 			break;
-		case elephant:
+		case Elephant:
 			elephantskill();
 			break;
-		case viper:
+		case Viper:
 			viperskill();
 		}
 
 		switch (teamEnemy[0].type)
 		{
-		case turtle:
+		case Turtle:
 			turtleskill(&teamEnemy[0], &fightteam[3]);
 			break;
-		case skunk:
+		case Skunk:
 			skunkskill(&teamEnemy[0], &fightteam[3], 0);
 			break;
-		case owl:
+		case Owl:
 			owlskill();
 			break;
-		case poisondart_frog:
+		case PoisonDartFrog:
 			poisondartfrogskill(&fightteam[3]);
 			break;
-		case hawk:
+		case Hawk:
 			hawkskill();
 			break;
-		case elephant:
+		case Elephant:
 			elephantskill();
 			break;
-		case viper:
+		case Viper:
 			viperskill();
 		}
 
@@ -170,12 +187,12 @@ int checkcombatover()
 {
 	int t = 0;
 	for (int i = 0; i < 4; i++) {
-		if (fightteam[i].type == 0)
+		if (fightteam[i].visible == 0)
 			t++;
 	}
 	int e = 0;
 	for (int i = 0; i < 4; i++) {
-		if (teamEnemy[i].type == 0)
+		if (teamEnemy[i].visible == 0)
 			e++;
 	}
 
@@ -248,9 +265,8 @@ void givemoneystage()
 	case 9:
 		money += 18;
 		break;
-	case 10:
+	case FINAL_STAGE:
 		money += 20;
-		break;
 	}
 
 }
@@ -281,10 +297,10 @@ void skunkskill(struct unit* skunk, struct unit* object, int tore)//1= skunk is 
 void owlskill()
 {
 	int last;
-	if (fightteam[3].type == owl)
+	if (fightteam[3].type == Owl)
 	{
 		last = 3;
-		while (teamEnemy[last].type == 0) {
+		while (teamEnemy[last].visible == 0) {
 			last--;
 		}
 		if (last == 0)
@@ -296,10 +312,10 @@ void owlskill()
 			teamEnemy[0].life += fightteam[3].att;
 		}
 	}
-	if (teamEnemy[0].type == owl)
+	if (teamEnemy[0].type == Owl)
 	{
 		last = 0;
-		while (teamEnemy[last].type == 0) {
+		while (teamEnemy[last].visible == 0) {
 			last++;
 		}
 		if (last == 3)
@@ -318,11 +334,11 @@ void poisondartfrogskill(struct unit* object)
 
 void hawkskill()
 {
-	if (fightteam[3].type == hawk)
+	if (fightteam[3].type == Hawk)
 	{
 		teamEnemy[1].life -= fightteam[3].att;
 	}
-	if (teamEnemy[0].type == hawk)
+	if (teamEnemy[0].type == Hawk)
 	{
 		teamPlayer[2].life -= teamEnemy[0].att;
 	}
@@ -330,14 +346,14 @@ void hawkskill()
 
 void elephantskill()
 {
-	if (fightteam[3].type == elephant)
+	if (fightteam[3].type == Elephant)
 	{
 		for (int i = 1; i < 4; i++)
 		{
 			teamEnemy[i].life -= 2;
 		}
 	}
-	if (teamEnemy[0].type == elephant)
+	if (teamEnemy[0].type == Elephant)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -352,9 +368,9 @@ void viperskill()
 	int ealone = 0;
 	for (int i = 0; i < 4; i++)
 	{
-		if (fightteam[i].type != 0)
+		if (fightteam[i].visible != 0)
 			talone++;
-		if (teamEnemy[i].type != 0)
+		if (teamEnemy[i].visible != 0)
 			ealone++;
 	}
 	if (talone == 1) {
@@ -366,10 +382,10 @@ void viperskill()
 		return;
 	}
 
-	if (fightteam[3].type == viper)
+	if (fightteam[3].type == Viper)
 	{
 		int r = CP_Random_RangeInt(0, 2);
-		while (fightteam[r].type == 0)
+		while (fightteam[r].visible == 0)
 		{
 			r = CP_Random_RangeInt(0, 2);
 		}
@@ -377,10 +393,10 @@ void viperskill()
 		fightteam[r].life += teamEnemy[0].life;
 		teamEnemy[0].life = -99;
 	}
-	if (teamEnemy[0].type == viper)
+	if (teamEnemy[0].type == Viper)
 	{
 		int r = CP_Random_RangeInt(1, 3);
-		while (fightteam[r].type == 0)
+		while (fightteam[r].visible == 0)
 		{
 			r = CP_Random_RangeInt(1, 3);
 		}
@@ -394,11 +410,11 @@ void viperskill()
 
 void snasnapping_turtleskill()
 {
-	if (fightteam[3].type == snapping_turtle)
+	if (fightteam[3].type == SnappingTurtle)
 	{
 		teamEnemy[0].att = 3;
 	}
-	if (teamEnemy[0].type == snapping_turtle)
+	if (teamEnemy[0].type == SnappingTurtle)
 	{
 		fightteam[3].att = 3;
 	}
@@ -406,7 +422,7 @@ void snasnapping_turtleskill()
 
 int checkgameover()
 {
-	if (playerLife <= 0 || stage > 10)
+	if (playerLife <= 0 || stage > FINAL_STAGE)
 	{
 		CP_Engine_SetNextGameState(gameover_init, gameover_update, gameover_exit);
 		return 1;

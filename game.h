@@ -14,6 +14,9 @@
 
 #define SHOP_SIZE 3
 #define TEAM_SIZE 4
+#define FINAL_STAGE 10
+#define MAX_SHOP_LEVEL 5
+#define MAX_UNIT_TIER 4
 
 extern struct unit teamPlayer[TEAM_SIZE];
 extern struct unit shopPlayer[SHOP_SIZE];
@@ -26,7 +29,7 @@ extern int moneyEnemy;
 
 extern int playerLife;
 extern int stage;
-extern int storelevel;
+extern int shopLevel;
 extern int select;
 
 extern int upgradeShopDiscount;

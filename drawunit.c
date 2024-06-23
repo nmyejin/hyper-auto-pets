@@ -7,67 +7,67 @@ void Drawunittext(float posx, float posy, int type)
 
 	switch (type)
 	{
-	case spider:
+	case Spider:
 		CP_Font_DrawText("Spider", posx, posy);
 		break;
-	case hamster:
+	case Hamster:
 		CP_Font_DrawText("Hamster", posx, posy);
 		break;
-	case pigeon:
+	case Pigeon:
 		CP_Font_DrawText("Pigeon", posx, posy);
 		break;
-	case sparrow:
+	case Sparrow:
 		CP_Font_DrawText("Sparrow", posx, posy);
 		break;
-	case frog:
+	case Frog:
 		CP_Font_DrawText("Frog", posx, posy);
 		break;
-	case dog:
+	case Dog:
 		CP_Font_DrawText("Dog", posx, posy);
 		break;
-	case turtle:
+	case Turtle:
 		CP_Font_DrawText("Turtle", posx, posy);
 		break;
-	case chicken:
+	case Chicken:
 		CP_Font_DrawText("Chicken", posx, posy);
 		break;
-	case chick:
+	case Chick:
 		CP_Font_DrawText("Chick", posx, posy);
 		break;
-	case cheerleader:
+	case Cheerleader:
 		CP_Font_DrawText("Cheerleader", posx, posy);
 		break;
-	case poisondart_frog:
+	case PoisonDartFrog:
 		CP_Font_DrawText("Poisonart frog", posx, posy);
 		break;
-	case owl:
+	case Owl:
 		CP_Font_DrawText("Owl", posx, posy);
 		break;
-	case pig:
+	case Pig:
 		CP_Font_DrawText("Pig", posx, posy);
 		break;
-	case tiger:
+	case Tiger:
 		CP_Font_DrawText("Tiger", posx, posy);
 		break;
-	case skunk:
+	case Skunk:
 		CP_Font_DrawText("Skunk", posx, posy);
 		break;
-	case magpie:
+	case Magpie:
 		CP_Font_DrawText("Magpie", posx, posy);
 		break;
-	case hawk:
+	case Hawk:
 		CP_Font_DrawText("Hawk", posx, posy);
 		break;
-	case viper:
+	case Viper:
 		CP_Font_DrawText("Viper", posx, posy);
 		break;
-	case elephant:
+	case Elephant:
 		CP_Font_DrawText("Elephant", posx, posy);
 		break;
-	case snapping_turtle:
+	case SnappingTurtle:
 		CP_Font_DrawText("Snapping turtle", posx, posy);
 		break;
-	case chameleon:
+	case Chameleon:
 		CP_Font_DrawText("Chameleon", posx, posy);
 		break;
 	}
@@ -95,14 +95,10 @@ void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 	Drawstage(stage);
 
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-	if(teamPlayer[0].type == 0)
-		CP_Graphics_DrawRect(200, 300, 250, 200); //deckslot1
-	if (teamPlayer[1].type == 0)
-		CP_Graphics_DrawRect(450, 300, 250, 200); //deckslot2
-	if (teamPlayer[2].type == 0)
-		CP_Graphics_DrawRect(700, 300, 250, 200); //deckslot3
-	if (teamPlayer[3].type == 0)
-		CP_Graphics_DrawRect(950, 300, 250, 200); //deckslot1
+	CP_Graphics_DrawRect(200, 300, 250, 200); //deckslot1
+	CP_Graphics_DrawRect(450, 300, 250, 200); //deckslot2
+	CP_Graphics_DrawRect(700, 300, 250, 200); //deckslot3
+	CP_Graphics_DrawRect(950, 300, 250, 200); //deckslot1
 
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
 	CP_Graphics_DrawRect(200, 600, 250, 200); // storeslot1
@@ -120,24 +116,20 @@ void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 
 void Drawunit(struct unit store_unit, float x, float y)
 {
-	if (store_unit.type <= 0)
+	if (store_unit.type <= 0
+		|| store_unit.type > Chameleon
+		|| store_unit.visible == 0)
 		return;
-	else if (store_unit.type <= frog)
+	else if (store_unit.type <= Frog)
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-	else if (store_unit.type <= cheerleader)
+	else if (store_unit.type <= Cheerleader)
 		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
-	else if (store_unit.type <= magpie)
+	else if (store_unit.type <= Magpie)
 		CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
-	else if (store_unit.type <= chameleon)
+	else if (store_unit.type <= Chameleon)
 		CP_Settings_Fill(CP_Color_Create(120, 120, 120, 255));
 
-
 	CP_Graphics_DrawRect(x, y, 250, 200);
-
-	if (store_unit.type < spider || chameleon < store_unit.type)
-	{
-		return;
-	}
 
 	drawunitlife(store_unit.life, x, y);
 	drawunitatt(store_unit.att, x, y);
@@ -180,11 +172,11 @@ void DrawShop()
 }
 void DrawTeam()
 {
-	for (int i = 1; i < 5; i++)
+	for (int i = 0; i < TEAM_SIZE; i++)
 	{
-		float x = 200.0f + 250 * (i - 1);
+		float x = 200.0f + 250 * (i);
 		float y = 300;
-		Drawunit(teamPlayer[i - 1], x, y);
+		Drawunit(teamPlayer[i], x, y);
 	}
 }
 
@@ -311,4 +303,9 @@ int checksell()
 		return 1;
 	}
 	return 0;
+}
+
+void ShowUnitDescription(struct unit* unit)
+{
+	CP_Font_DrawText(unit->description, 1300, 200);
 }

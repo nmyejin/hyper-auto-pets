@@ -24,6 +24,17 @@ int clickedrect(float posx, float posy, float width, float height)
 	return 0;
 }
 
+bool MouseHoverRect(float posx, float posy, float width, float height)
+{
+	float x = CP_Input_GetMouseX();
+	float y = CP_Input_GetMouseY();
+
+	if ((posx <= x && x <= posx + width)
+		&& (posy <= y && y <= posy + height))
+		return true;
+	return false;
+}
+
 
 int clickimage(float posx, float posy, float width, float height)
 {

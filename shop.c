@@ -2,35 +2,30 @@
 
 int shopInfo[MAX_SHOP_LEVEL][1 + MAX_UNIT_TIER] = {
 	// cost, rate(unit A, B, C, D)
-	//{ 0, 100,  0,  0,  0},
-	//{10,  50, 50,  0,  0},
-	//{15,  25, 50, 25,  0},
-	//{25,  15, 40, 40,  5},
-	//{30,  10, 35, 45, 10}
 	{ 0, 100,  0,  0,  0},
-	{1,  0, 100,  0,  0},
-	{1,  0, 0, 100,  0},
-	{1,  0, 0, 0,  100},
-	{1,  10, 35, 45, 10}
+	{10,  50, 50,  0,  0},
+	{15,  25, 50, 25,  0},
+	{25,  15, 40, 40,  5},
+	{30,  10, 35, 45, 10}
 };
 
 int LastIdxUnitTier(int sl)
 {
 	switch (sl) {
 	case 1:
-		return frog;
+		return Frog;
 	case 2:
-		return cheerleader;
+		return Cheerleader;
 	case 3:
-		return magpie;
+		return Magpie;
 	case 4:
-		return chameleon;
+		return Chameleon;
 	default:
 		return 0;
 	}
 }
 
-void SummonShop(struct unit *shop)
+void SummonShop(struct unit *shop, int shopLv)
 {
 	srand((unsigned int)time(NULL));
 	
@@ -41,7 +36,7 @@ void SummonShop(struct unit *shop)
 
 		for (int j = 0; j < MAX_UNIT_TIER; j++)
 		{
-			threshold += shopInfo[storelevel - 1][j + 1];
+			threshold += shopInfo[shopLv - 1][j + 1];
 
 			if (randNum < threshold)
 			{
@@ -56,8 +51,9 @@ void SummonShop(struct unit *shop)
 					} while (storeUnit == 9);
 				}
 				
-				shop[i].type = storeUnit;
-				LoadUnitFromFile(&shop[i]);
+				/*shop[i].type = storeUnit;
+				LoadUnitFromFile(&shop[i]);*/
+				InitializeUnit(&shop[i], storeUnit);
 				break;
 			}
 		}
@@ -94,10 +90,10 @@ bool IsEndturnClicked()
 
 void UpgradeShop()
 {
-	int cost = shopInfo[storelevel][0] + upgradeShopDiscount;
-	if (storelevel < 5 && money >= cost)
+	int cost = shopInfo[shopLevel][0] + upgradeShopDiscount;
+	if (shopLevel < 5 && money >= cost)
 	{
 		money -= cost;
-		storelevel++;
+		shopLevel++;
 	}
 }
