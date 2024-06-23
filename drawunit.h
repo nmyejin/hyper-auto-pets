@@ -1,6 +1,7 @@
 #pragma once
 #include "cprocessing.h"
 #include "game.h"
+#include "shop.h"
 #include <stdio.h>
 #include "unit.h"
 

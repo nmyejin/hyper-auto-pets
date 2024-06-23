@@ -201,6 +201,15 @@ void drawrefresh()
 void drawupgradestore()
 {
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+
+	CP_Settings_TextSize(30.0f);
+	char buffer[50];
+	if (shopLevel != MAX_SHOP_LEVEL)
+		sprintf_s(buffer, 50, "shop level: %d\nupgrade cost: %d", shopLevel, 0);
+	else
+		sprintf_s(buffer, 50, "shop level: %d", shopLevel);
+	CP_Font_DrawText(buffer, 490, 860);
+
 	CP_Settings_TextSize(100.0f);
 	CP_Font_DrawText("Upgrade", 200, 840);
 }
