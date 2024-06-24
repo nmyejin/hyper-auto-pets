@@ -5,11 +5,10 @@ int playerLife = 5;
 int stage = 1;
 int shopLevel = 1;
 int select = 0;
+bool freeze = 0;
 
 int upgradeShopDiscount = 0;
 bool defeatLastCombat = 0;
-
-int shuffle = 2;
 
 struct unit shopPlayer[SHOP_SIZE];
 struct unit teamPlayer[TEAM_SIZE];
@@ -26,7 +25,7 @@ void GameInit()
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 0));
 	// insert backgroundimage
 	
-	if(shuffle / 2 == 1)
+	if(!freeze)
 		SummonShop(shopPlayer, shopLevel);
 }
 
@@ -123,10 +122,7 @@ void GameUpdate()
 
 	if (IsFreezeClicked() == 1)
 	{
-		if (shuffle == 2)
-			shuffle += 2;
-		else if (shuffle == 4)
-			shuffle -= 2;
+		freeze = !freeze;
 	}
 
 	if (IsUpgradeClicked() == 1)
@@ -196,10 +192,9 @@ void BuyUnit(struct unit *shop, struct unit *team, int shopID, int teamID, int *
 		if (BuyChameleon(team, teamID))
 			notBuy = true;
 		break;
-
-	case Dog:
-		BuyDog(team, shop, shopID);
 	}
+
+	BuyDog(team, shop, shopID);
 
 	*gold -= 3;
 
@@ -365,19 +360,21 @@ bool BuyChameleon(struct unit* team, int teamIdx)
 void BuyDog(struct unit* team, struct unit* shop, int shopID)
 {
 	//check dog is exist
-	int buff = 0;
+	int buffcount = 0;
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (team[i].type == 6 && shop[shopID].att > team[i].att)
+		if (team[i].type == Dog && shop[shopID].att > team[i].att)
 		{
-			buff++;
+			buffcount++;
 		}
 	}
 	for (int i = 0; i < 4; i++)
 	{
+		int buff;
 		if (team[i].type != 0)
-		{	
+		{
+			buff = buffcount;
 			while (buff > 0)
 			{
 				team[i].att++;

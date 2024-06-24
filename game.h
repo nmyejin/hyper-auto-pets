@@ -31,6 +31,7 @@ extern int playerLife;
 extern int stage;
 extern int shopLevel;
 extern int select;
+extern bool freeze;
 
 extern int upgradeShopDiscount;
 extern bool defeatLastCombat;

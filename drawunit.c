@@ -1,5 +1,8 @@
 #include "drawunit.h"
 #include "math.h"
+
+int costShopUpgrade[MAX_SHOP_LEVEL] = { 0, 10, 15, 25, 30 };
+
 void Drawunittext(float posx, float posy, int type)
 {
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
@@ -108,8 +111,11 @@ void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
 	CP_Graphics_DrawRect( 200, 840, 250, 100); // upgrade store
 	CP_Graphics_DrawRect(1200, 800, 300, 200); // refresh store
-	CP_Graphics_DrawRect(1525, 800, 200, 200); // freeze store
 	CP_Graphics_DrawRect(1750, 800, 200, 200); // endturn
+
+	if (freeze)
+		CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
+	CP_Graphics_DrawRect(1525, 800, 200, 200); // freeze store
 }
 
 
@@ -205,7 +211,7 @@ void drawupgradestore()
 	CP_Settings_TextSize(30.0f);
 	char buffer[50];
 	if (shopLevel != MAX_SHOP_LEVEL)
-		sprintf_s(buffer, 50, "shop level: %d\nupgrade cost: %d", shopLevel, 0);
+		sprintf_s(buffer, 50, "shop level: %d\nupgrade cost: %d", shopLevel, costShopUpgrade[shopLevel]);
 	else
 		sprintf_s(buffer, 50, "shop level: %d", shopLevel);
 	CP_Font_DrawText(buffer, 490, 860);
