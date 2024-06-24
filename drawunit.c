@@ -88,6 +88,7 @@ void DrawInterface(int howmuchmoney, int howmanylife, int stagewhat)
 	posX = lowerBtnPosX;
 	posY = lowerBtnPosY;
 
+	CP_Image upgradeImg = CP_Image_Load("./img/upgrade.png");
 	CP_Image refreshImg = CP_Image_Load("./img/refresh.png");
 	CP_Image freezeImg = CP_Image_Load("./img/freeze_blue.png");
 	CP_Image freezeImgNone = CP_Image_Load("./img/freeze_gray.png");
@@ -97,6 +98,7 @@ void DrawInterface(int howmuchmoney, int howmanylife, int stagewhat)
 
 	// upgrade shop button
 	CP_Graphics_DrawRect(teamPosX + 40, shopPosY + 125, btnWidth, btnHeight);
+	CP_Image_Draw(upgradeImg, teamPosX + 40 + btnWidth / 2, shopPosY + 125 + btnHeight / 2, btnWidth, btnHeight, 255);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -430,14 +432,14 @@ void Drawunit(struct unit store_unit, float x, float y)
 
 void drawupgradestore()
 {
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 	CP_Settings_TextSize(30.0f);
 
 	char buffer[20];
 	sprintf_s(buffer, 20, "shop level: %d", shopLevel);
 	CP_Font_DrawText(buffer, teamPosX + 40, shopPosY + 20);
 
-  if (shopLevel != MAX_SHOP_LEVEL)
+	if (shopLevel != MAX_SHOP_LEVEL)
 	{
 		sprintf_s(buffer, 20, "upgrade cost: %d", costShopUpgrade[shopLevel]);
 		CP_Font_DrawText(buffer, teamPosX + 40, shopPosY + 20 + 32);
@@ -482,7 +484,7 @@ void combat_interface()
 
 void drawfightteam(struct unit* team, float x, float y, int enemyT)
 {
-	const float amplitude = 167.0f;
+	const float amplitude = 75.0;
 
 	for (int i = 1; i < 3; i++)
 	{
