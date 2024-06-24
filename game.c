@@ -103,10 +103,10 @@ void GameUpdate()
 	//drawendturn();
 	//drawfreeze();
 	//drawrefresh();
-	drawupgradestore();
 
 	DrawTeam();
 	DrawShop();
+	drawupgradestore();
 	
 	/* Click Button */
 	if (IsRefreshClicked() == 1 && money > 0)
