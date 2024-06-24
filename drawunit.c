@@ -333,8 +333,7 @@ void Drawunit(struct unit store_unit, float x, float y)
 {
 	loadimage();
 	if (store_unit.type <= 0
-		|| store_unit.type > Chameleon
-		|| store_unit.visible == 0)
+		|| store_unit.type > Chameleon)
 		return;
 	else if (store_unit.type <= Frog)
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
@@ -483,7 +482,7 @@ void combat_interface()
 
 void drawfightteam(struct unit* team, float x, float y, int enemyT)
 {
-	const float Amplitude = 167.0f;
+	const float amplitude = 167.0f;
 
 	for (int i = 1; i < 3; i++)
 	{

@@ -380,7 +380,7 @@ void BuyDog(struct unit* team, struct unit* shop, int shopID)
 	}
 	for (int i = 0; i < 4; i++)
 	{
-		int buff;
+		int buff = 0;
 		if (team[i].type != 0)
 		{	
 			team[i].att += buff;
