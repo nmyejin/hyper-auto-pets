@@ -31,8 +31,10 @@ void GameInit()
 
 	loadimage();
 	
-	if(!freeze)
+	if (!freeze)
 		SummonShop(shopPlayer, shopLevel);
+	else
+		ReloadShopPlayer();
 }
 
 void GameUpdate()
@@ -56,7 +58,7 @@ void GameUpdate()
 		if (triggeredrect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight) && teamPlayer[i].type != 0)
 			select = i + 4;
 
-		if (MouseHoverRect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight))
+		if (teamPlayer[i].type != 0 && MouseHoverRect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight))
 			ShowUnitDescription(&teamPlayer[i]);
 	}
 
@@ -109,7 +111,7 @@ void GameUpdate()
 	drawupgradestore();
 	
 	/* Click Button */
-	if (IsRefreshClicked() == 1 && money > 0)
+	if (IsRefreshClicked() == 1 && money > 0 && !freeze)
 	{
 		SummonShop(shopPlayer, shopLevel);
 		money -= 1;
@@ -133,13 +135,6 @@ void GameUpdate()
 		CP_Engine_SetNextGameState(stage_init, stage_update, stage_exit);
 		CP_Engine_Run();
 	}
-
-	char buffer[50] = { 0 };
-	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
-	CP_Settings_TextSize(20.0f);
-	CP_Font_DrawText(buffer, 30, 30);
-
-	/* Input mouse */
 }
 
 void GameExit() 

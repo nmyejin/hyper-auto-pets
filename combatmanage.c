@@ -24,9 +24,21 @@ void SummonTeamEnemy()
 
 		if (shopEnemyInfo.y >= enemyInfo.y)
 		{
-			if (teamEnemy[(int)enemyInfo.x].type != 0)
-				SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
-			BuyUnit(shopEnemy, teamEnemy, (int)shopEnemyInfo.x, (int)enemyInfo.x, &moneyEnemy);
+			int cntDuplicate = 0;
+			for (int i = 0; i < TEAM_SIZE; i++)
+			{
+				if (teamEnemy[i].type == shopEnemy[(int)shopEnemyInfo.x].type)
+					cntDuplicate++;
+			}
+
+			if (cntDuplicate >= 2)
+				SummonShop(shopEnemy, shopLevelEnemy);
+			else
+			{
+				if (teamEnemy[(int)enemyInfo.x].type != 0)
+					SellUnit(teamEnemy, (int)enemyInfo.x, &moneyEnemy);
+				BuyUnit(shopEnemy, teamEnemy, (int)shopEnemyInfo.x, (int)enemyInfo.x, &moneyEnemy);
+			}
 		}
 		else if (moneyEnemy >= 4)
 		{
@@ -209,7 +221,8 @@ int checkcombatover()
 	if (e == 4)//win
 	{	
 		stage++;
-		checkgameover();
+		//checkgameover();
+		givemoneystage();
 		if (checkgameover())
 			return 0;
 		CP_Engine_SetNextGameState(GameInit, GameUpdate, GameExit);

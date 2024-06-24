@@ -5,6 +5,7 @@
 
 int LastIdxUnitTier(int sl);
 void SummonShop(struct unit* shop, int shopLv);
+void ReloadShopPlayer();
 
 bool IsRefreshClicked();
 bool IsFreezeClicked();

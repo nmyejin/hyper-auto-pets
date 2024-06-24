@@ -172,6 +172,7 @@ void DrawSellButton()
 	float x = lowerBtnPosX;
 	float y = lowerBtnPosY - (btnHeight + 10);
 	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 120));
+	CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
 	CP_Graphics_DrawRect(x, y, btnWidth, btnHeight);
 
 	CP_Image img = CP_Image_Load("./img/shop.png");
@@ -441,7 +442,7 @@ void drawupgradestore()
 
 	if (shopLevel != MAX_SHOP_LEVEL)
 	{
-		sprintf_s(buffer, 20, "upgrade cost: %d", costShopUpgrade[shopLevel]);
+		sprintf_s(buffer, 20, "upgrade cost: %d", costShopUpgrade[shopLevel] + upgradeShopDiscount);
 		CP_Font_DrawText(buffer, teamPosX + 40, shopPosY + 20 + 32);
 	}
 }

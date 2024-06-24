@@ -51,12 +51,19 @@ void SummonShop(struct unit *shop, int shopLv)
 					} while (storeUnit == 9);
 				}
 				
-				/*shop[i].type = storeUnit;
-				LoadUnitFromFile(&shop[i]);*/
 				InitializeUnit(&shop[i], storeUnit);
 				break;
 			}
 		}
+	}
+}
+
+void ReloadShopPlayer()
+{
+	for (int i = 0; i < SHOP_SIZE; i++)
+	{
+		if (shopPlayer[i].type != 0)
+			InitializeUnit(&shopPlayer[i], shopPlayer[i].type);
 	}
 }
 
@@ -96,4 +103,6 @@ void UpgradeShop()
 		money -= cost;
 		shopLevel++;
 	}
+
+	SummonShop(shopPlayer, shopLevel);
 }

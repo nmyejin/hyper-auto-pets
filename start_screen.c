@@ -39,10 +39,6 @@ void startscreen_update(void)
 		CP_Engine_SetNextGameState(GameInit, GameUpdate, GameExit);
 		CP_Engine_Run();
 	}
-	CP_Settings_TextSize(20.0f);
-	char buffer[50] = { 0 };
-	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
-	CP_Font_DrawText(buffer, 30, 30);
 }
 
 
