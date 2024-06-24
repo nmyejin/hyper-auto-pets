@@ -2,7 +2,6 @@
 
 void InitializeUnit(struct unit* unit, enum unitlist ul)
 {
-	unit->visible = true;
 	unit->type = ul;
 	LoadUnitFromFile(unit);
 }
@@ -27,6 +26,7 @@ void LoadUnitFromFile(struct unit* myunit)
 	myunit->life = myunit->Maxhp;
 	myunit->Maxtime = 1;
 
+	fscanf_s(unitinfo, "%s", &myunit->name, (unsigned int)sizeof(myunit->name));
 	fscanf_s(unitinfo, "%[^^]s", &myunit->description, (unsigned int)sizeof(myunit->description));
 
 	fclose(unitinfo);

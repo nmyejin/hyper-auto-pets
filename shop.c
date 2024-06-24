@@ -62,28 +62,28 @@ void SummonShop(struct unit *shop, int shopLv)
 
 bool IsRefreshClicked()
 {
-	if (clickedrect(1200, 800, 300, 200) == 1)
+	if (clickedrect(lowerBtnPosX, lowerBtnPosY, btnWidth, btnHeight) == 1)
 		return 1;
 	return 0;
 }
 
 bool IsFreezeClicked()
 {
-	if (clickedrect(1525, 800, 200, 200) == 1)
+	if (clickedrect(lowerBtnPosX + (btnWidth + 10), lowerBtnPosY, btnWidth, btnHeight) == 1)
 		return 1;	
 	return 0;
 }
 
 bool IsUpgradeClicked()
 {
-	if (clickedrect(200, 840, 250, 100) == 1)
+	if (clickedrect(teamPosX + 40, shopPosY + 125, btnWidth, btnHeight) == 1)
 		return 1;
 	return 0;
 }
 
 bool IsEndturnClicked()
 {
-	if (clickedrect(1750, 800, 200, 200) == 1)
+	if (clickedrect(lowerBtnPosX + (btnWidth + 10) * 2, lowerBtnPosY, btnWidth, btnHeight) == 1)
 		return 1;
 	return 0;
 }

@@ -2,21 +2,22 @@
 
 CP_Image backgroundimage2 = NULL;
 
-int money = 10000;
+int money = 0;
 int playerLife = 5;
 int stage = 1;
 int shopLevel = 1;
 int select = 0;
+bool freeze = 0;
 
 int upgradeShopDiscount = 0;
 bool defeatLastCombat = 0;
 
-int shuffle = 2;
-
 struct unit shopPlayer[SHOP_SIZE];
 struct unit teamPlayer[TEAM_SIZE];
 struct unit teamEnemy[TEAM_SIZE];
-struct unit fightteam[TEAM_SIZE];
+
+struct unit fightPlayer[TEAM_SIZE];
+struct unit fightEnemy[TEAM_SIZE];
 
 void GameInit()
 {
@@ -30,7 +31,7 @@ void GameInit()
 
 	loadimage();
 	
-	if(shuffle / 2 == 1)
+	if(!freeze)
 		SummonShop(shopPlayer, shopLevel);
 }
 
@@ -42,33 +43,27 @@ void GameUpdate()
 	// shop
 	for (int i = 0; i < 3; i++)
 	{
-		if (triggeredrect(200.0f + 250 * i, 600, 250, 200) && shopPlayer[i].type != 0)
-		{
+		if (triggeredrect(shopPosX + cardWidth * i, shopPosY, cardWidth, cardHeight) && shopPlayer[i].type != 0)
 			select = i + 1;
-		}
 
-		if (MouseHoverRect(200.0f + 250 * i, 600, 250, 200))
+		if (shopPlayer[i].type != 0 && MouseHoverRect(shopPosX + cardWidth * i, shopPosY, cardWidth, cardHeight))
 			ShowUnitDescription(&shopPlayer[i]);
 	}
 
 	// player team
 	for (int i = 0; i < 4; i++)
 	{
-		if (triggeredrect(200.0f + 250 * i, 300, 250, 200) && teamPlayer[i].type != 0)
-		{
+		if (triggeredrect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight) && teamPlayer[i].type != 0)
 			select = i + 4;
-		}
 
-		if (MouseHoverRect(200.0f + 250 * i, 300, 250, 200))
+		if (MouseHoverRect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight))
 			ShowUnitDescription(&teamPlayer[i]);
 	}
 
 	/* Release click */
 	// draw sell button
 	if (select >= 4)
-	{
-		drawsellinterface();
-	}
+		DrawSellButton();
 
 	if (CP_Input_MouseReleased(MOUSE_BUTTON_1))
 	{
@@ -86,17 +81,17 @@ void GameUpdate()
 				SellUnit(teamPlayer, teamIdx, &money);
 
 			// swap team unit
-			if (300 <= y && y <= 500)
-				Swap(teamIdx, (int)(x - 200) / 250, 4);
+			if (teamPosY <= y && y <= teamPosY + cardHeight)
+				Swap(teamIdx, (int)((x - teamPosX) / cardWidth), 4);
 		}
 		// shop
 		else
 		{
 			teamIdx = select - 1;
 
-			if (300 <= y && y <= 500)
+			if (teamPosY <= y && y <= teamPosY + cardHeight)
 			{
-				BuyUnit(shopPlayer, teamPlayer, teamIdx, ((int)x - 200) / 250, &money);
+				BuyUnit(shopPlayer, teamPlayer, teamIdx, (int)((x - teamPosX) / cardWidth), &money);
 			}
 		}
 
@@ -104,10 +99,10 @@ void GameUpdate()
 	}
 
 	/* Draw */
-	Drawinterfaces(money, playerLife, stage);
-	drawendturn();
-	drawfreeze();
-	drawrefresh();
+	DrawInterface(money, playerLife, stage);
+	//drawendturn();
+	//drawfreeze();
+	//drawrefresh();
 	drawupgradestore();
 
 	DrawTeam();
@@ -122,10 +117,7 @@ void GameUpdate()
 
 	if (IsFreezeClicked() == 1)
 	{
-		if (shuffle == 2)
-			shuffle += 2;
-		else if (shuffle == 4)
-			shuffle -= 2;
+		freeze = !freeze;
 	}
 
 	if (IsUpgradeClicked() == 1)
@@ -207,7 +199,8 @@ void BuyUnit(struct unit *shop, struct unit *team, int shopID, int teamID, int *
 			notBuy = true;
 		break;
 	}
-
+  
+  BuyDog(team, shop, shopID);
 
 	*gold -= 3;
 
@@ -376,17 +369,18 @@ bool BuyChameleon(struct unit* team, int teamIdx)
 void BuyDog(struct unit* team, struct unit* shop, int shopID)
 {
 	//check dog is exist
-	int buff = 0;
+	int buffcount = 0;
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (team[i].type == 6 && shop[shopID].att > team[i].att)
+		if (team[i].type == Dog && shop[shopID].att > team[i].att)
 		{
-			buff++;
+			buffcount++;
 		}
 	}
 	for (int i = 0; i < 4; i++)
 	{
+		int buff;
 		if (team[i].type != 0)
 		{	
 			team[i].att += buff;

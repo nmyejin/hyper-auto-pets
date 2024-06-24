@@ -30,26 +30,36 @@ extern CP_Image I_Chameleon;
 
 #define PI 3.14159226535897932
 
-void Drawunittext(float posx, float posy, int type);
-void Drawmoney(int howmuch);
-void Drawinterfaces(int howmuchmoney, int howmanylife, int stage);
+extern float upperBarHeight;
+extern float cardWidth, cardHeight;
+extern float btnWidth, btnHeight;
+
+extern float stagePosX, stagePosY;
+extern float teamPosX, teamPosY;
+extern float shopPosX, shopPosY;
+extern float lowerBtnPosX, lowerBtnPosY;
+
+void DrawInterface(int howmuchmoney, int howmanylife, int stage);
+
+void DrawStage(float x, float y);
+void DrawMoney(float x, float y);
+void DrawLife(float x, float y);
+void DrawSellButton();
+
 void Drawunit(struct unit store_unit, float x, float y);
-void Drawlife(int howmanylife);
-void Drawstage(int stage);
+void Drawunittext(float posx, float posy, int type);
+
 void DrawShop();
 void DrawTeam();
-void drawfreeze();
-void drawendturn();
-void drawrefresh();
 void drawupgradestore();
-void drawsellinterface();
+
 
 void ShowUnitDescription(struct unit* unit);
 
 //combat
 void drawunitlife(int life, float unitx, float unity);
 void drawunitatt(int att, float unitx, float unity);
-void drawfightteam(struct unit* abc, float x, float y, int enemyT);
+void drawfightteam(struct unit* team, float x, float y, int enemyT);
 void combat_interface(); 
 int checksell();
 void loadimage();

@@ -22,7 +22,9 @@ extern struct unit teamPlayer[TEAM_SIZE];
 extern struct unit shopPlayer[SHOP_SIZE];
 extern struct unit teamEnemy[TEAM_SIZE];
 extern struct unit shopEnemy[SHOP_SIZE];
-extern struct unit fightteam[TEAM_SIZE];
+
+extern struct unit fightPlayer[TEAM_SIZE];
+extern struct unit fightEnemy[TEAM_SIZE];
 
 extern int money;
 extern int moneyEnemy;
@@ -31,6 +33,7 @@ extern int playerLife;
 extern int stage;
 extern int shopLevel;
 extern int select;
+extern bool freeze;
 
 extern int upgradeShopDiscount;
 extern bool defeatLastCombat;

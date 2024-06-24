@@ -39,7 +39,7 @@ enum unitlist
 
 struct unit
 {
-	bool visible;
+	//bool visible;
 	double time;
 	double Maxtime;
 	enum unitlist type;
@@ -47,6 +47,7 @@ struct unit
 	int att, life;
 	//char skill;
 	char description[150];
+	char name[20];
 };
 
 void InitializeUnit(struct unit* unit, enum unitlist ul);
