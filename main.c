@@ -13,14 +13,14 @@
 //---------------------------------------------------------
 
 #include "cprocessing.h"
-#include "start_screen.h"
+#include "digipen.h"
 
 // main() the starting point for the program
 // CP_Engine_SetNextGameState() tells CProcessing which functions to use for init, update and exit
 // CP_Engine_Run() is the core function that starts the simulation
 int main(void)
 {
-	CP_Engine_SetNextGameState(startscreen_init, startscreen_update, startscreen_exit);
+	CP_Engine_SetNextGameState(digipen_init, digipen_update, digipen_exit);
 	CP_Engine_Run();
 	return 0;
 }

@@ -5,7 +5,8 @@ CP_Image g_exit = NULL;
 
 void howto_init()
 {
-    g_howtoimage = CP_Image_Load("./Assets/howto.ppm");
+    CP_System_SetWindowSize(1200, 800);
+    g_howtoimage = CP_Image_Load("./Assets/howto.png");
     g_exit = CP_Image_Load("./Assets/exit.png");
 }
 void howto_update()
@@ -15,9 +16,9 @@ void howto_update()
     float x = CP_Input_GetMouseX();
     float y = CP_Input_GetMouseY();
 
-    CP_Image_Draw(g_howtoimage, 500, 500, 1000, 1000, 255);
-    CP_Image_Draw(g_exit, 150, 100, 300, 200, 255);
-    if ((0 <= x && x <= 300) && (y <= 200 && 0 <= y) && CP_Input_MouseClicked())
+    CP_Image_Draw(g_howtoimage, 600, 400, 1200, 800, 255);
+    CP_Image_Draw(g_exit, 1100, 750, 200, 100, 255);
+    if ((900 <= x && x <= 1200) && (y <= 800 && 700 <= y) && CP_Input_MouseClicked())
     {
         CP_Engine_SetNextGameState(startscreen_init, startscreen_update, startscreen_exit);
     }

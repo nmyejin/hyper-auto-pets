@@ -3,15 +3,15 @@ CP_Image backgroundimage = NULL;
 
 void startscreen_init(void)
 {
-	CP_System_SetWindowSize(1000, 1000);
-	backgroundimage = CP_Image_Load("./Assets/titleimage.ppm");
+	CP_System_SetWindowSize(2000, 1000);
+	backgroundimage = CP_Image_Load("./Assets/titleimage.jpg");
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_BOTTOM);
 }
 
 
 int ishowtoclicked()
 {
-	if (clicktext(130, 700, 100, 6) == 1)
+	if (clicktext(130, 850, 170, 6) == 1)
 	{
 		return 1;
 	}
@@ -20,7 +20,7 @@ int ishowtoclicked()
 
 int isstartclicked()
 {
-	if (clicktext(620, 700, 100, 5) == 1)
+	if (clicktext(970, 850, 170, 5) == 1)
 	{
 		return 1;
 	}
@@ -54,13 +54,19 @@ void startscreen_exit(void)
 int startscreen() //return 1 => start the game
 {
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
-	CP_Image_Draw(backgroundimage, 500, 500, 1000, 1000, 255);
+	CP_Image_Draw(backgroundimage, 1000, 500, 2000, 1000, 255);
+
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 150));
+	CP_Graphics_DrawRect(110, 240, 1320, 170);
+	CP_Graphics_DrawRect(135, 715, 525, 115);
+	CP_Graphics_DrawRect(970, 715, 425, 115);
+
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_TextSize(200.0f);
-	CP_Font_DrawText("TITLE", 250, 400);
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("HOW TO", 130, 700);
-	CP_Font_DrawText("START", 620, 700);
+	CP_Font_DrawText("   Hypher Auto Pets", 0, 400);
+	CP_Settings_TextSize(170.0f);
+	CP_Font_DrawText("HOW TO", 130, 850);
+	CP_Font_DrawText("START", 970, 850);
 
 	if (ishowtoclicked() == 1)
 	{

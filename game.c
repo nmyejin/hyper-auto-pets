@@ -1,5 +1,7 @@
 ﻿#include "game.h"
 
+CP_Image backgroundimage2 = NULL;
+
 int money = 0;
 int playerLife = 5;
 int stage = 1;
@@ -25,7 +27,9 @@ void GameInit()
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP);
 	CP_System_SetWindowSize(2000, 1000);
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 0));
-	// insert backgroundimage
+	backgroundimage2 = CP_Image_Load("./Assets/titleimage.jpg");
+
+	loadimage();
 	
 	if(!freeze)
 		SummonShop(shopPlayer, shopLevel);
@@ -33,14 +37,9 @@ void GameInit()
 
 void GameUpdate()
 {
-	CP_Graphics_ClearBackground(CP_Color_Create(150, 150, 150, 255));
+	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
+	CP_Image_Draw(backgroundimage2, 1000, 500, 2000, 1000, 255);
 
-	char buffer[50] = { 0 };
-	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
-	CP_Settings_TextSize(20.0f);
-	CP_Font_DrawText(buffer, 30, 30);
-
-	/* Input mouse */
 	// shop
 	for (int i = 0; i < 3; i++)
 	{
@@ -134,9 +133,20 @@ void GameUpdate()
 		CP_Engine_SetNextGameState(stage_init, stage_update, stage_exit);
 		CP_Engine_Run();
 	}
+
+	char buffer[50] = { 0 };
+	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
+	CP_Settings_TextSize(20.0f);
+	CP_Font_DrawText(buffer, 30, 30);
+
+	/* Input mouse */
 }
 
-void GameExit() { }
+void GameExit() 
+{ 
+	Imagefree();
+	CP_Image_Free(&backgroundimage2);
+}
 
 void Swap(int myId, int otherId, int size)
 {
@@ -189,13 +199,16 @@ void BuyUnit(struct unit *shop, struct unit *team, int shopID, int teamID, int *
 			notBuy = true;
 		break;
 	}
-
-	BuyDog(team, shop, shopID);
+  
+  BuyDog(team, shop, shopID);
 
 	*gold -= 3;
 
 	if (!notBuy)
 		team[teamID] = shop[shopID];
+
+	BuyDog(team, shop, shopID);
+
 	shop[shopID].type = 0;
 }
 
@@ -281,8 +294,8 @@ void SellHamster(struct unit *team)
 			randTeamID = 0;
 	}
 
-	team[randTeamID].att += 2;
-	team[randTeamID].life += 2;
+	team[randTeamID].att += 1;
+	team[randTeamID].life += 1;
 }
 
 void BuyCheerleader(struct unit* team)
@@ -292,7 +305,7 @@ void BuyCheerleader(struct unit* team)
 		if (team[i].type != 0)
 		{
 			team[i].att += 2;
-			team[i].life += 2;
+			team[i].life += 0;
 		}
 	}
 }
@@ -369,13 +382,8 @@ void BuyDog(struct unit* team, struct unit* shop, int shopID)
 	{
 		int buff;
 		if (team[i].type != 0)
-		{
-			buff = buffcount;
-			while (buff > 0)
-			{
-				team[i].att++;
-				buff--;
-			}
+		{	
+			team[i].att += buff;
 		}
 	}
 }
