@@ -6,14 +6,14 @@
 #include "combatmanage.h"
 #include "gameover.h"
 
-void SummonTeamEnemy(int stage);
+void SummonTeamEnemy();
 void hit();
 void checkdead();
 void fillin_emptyslot(struct unit* abc, int enemyT);
 void CheckHit();
 void timer();
 int checkcombatover();
-void teamintofightteam();
+void InitializeTeam();
 void givemoneystage(); 
 void turtleskill(struct unit* turtle, struct unit* object);
 void skunkskill(struct unit* skunk, struct unit* object, int tore);

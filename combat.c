@@ -11,10 +11,11 @@ void combat_init(void)
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP);
 	CP_System_SetWindowSize(2000, 1000);
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
-	teamintofightteam();
-	SummonTeamEnemy(stage);
-	fillin_emptyslot(fightteam, 0);
+	SummonTeamEnemy();
+	InitializeTeam();
+	fillin_emptyslot(fightPlayer, 0);
 	T = 0;
+
 	//howmanyturtle();
 	//heart = CP_Image_Load("./Assets/heart.ppm");
 	//att = CP_Image_Load("./Assets/att.ppm");
@@ -22,8 +23,7 @@ void combat_init(void)
 void combat_update(void)
 {
 	if (T >= 1) {
-		
-		fillin_emptyslot(fightteam, 0);
+		fillin_emptyslot(fightPlayer, 0);
 		fillin_emptyslot(teamEnemy, 1);
 		timer();
 		CheckHit();
@@ -32,7 +32,7 @@ void combat_update(void)
 		T += CP_System_GetDt();
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
 	combat_interface();
-	drawfightteam(fightteam, 125, 100, 0);
+	drawfightteam(fightPlayer, 125, 100, 0);
 	drawfightteam(teamEnemy, 875, 700, 1);
 	checkcombatover();
 }

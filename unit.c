@@ -2,7 +2,6 @@
 
 void InitializeUnit(struct unit* unit, enum unitlist ul)
 {
-	unit->visible = true;
 	unit->type = ul;
 	LoadUnitFromFile(unit);
 }

@@ -13,7 +13,9 @@ bool defeatLastCombat = 0;
 struct unit shopPlayer[SHOP_SIZE];
 struct unit teamPlayer[TEAM_SIZE];
 struct unit teamEnemy[TEAM_SIZE];
-struct unit fightteam[TEAM_SIZE];
+
+struct unit fightPlayer[TEAM_SIZE];
+struct unit fightEnemy[TEAM_SIZE];
 
 void GameInit()
 {
@@ -31,7 +33,7 @@ void GameInit()
 
 void GameUpdate()
 {
-	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
+	CP_Graphics_ClearBackground(CP_Color_Create(150, 150, 150, 255));
 
 	char buffer[50] = { 0 };
 	sprintf_s(buffer, 50, "Mousepointpos: %f, %f", CP_Input_GetMouseX(), CP_Input_GetMouseY());
@@ -42,33 +44,27 @@ void GameUpdate()
 	// shop
 	for (int i = 0; i < 3; i++)
 	{
-		if (triggeredrect(200.0f + 250 * i, 600, 250, 200) && shopPlayer[i].type != 0)
-		{
+		if (triggeredrect(shopPosX + cardWidth * i, shopPosY, cardWidth, cardHeight) && shopPlayer[i].type != 0)
 			select = i + 1;
-		}
 
-		if (MouseHoverRect(200.0f + 250 * i, 600, 250, 200))
+		if (shopPlayer[i].type != 0 && MouseHoverRect(shopPosX + cardWidth * i, shopPosY, cardWidth, cardHeight))
 			ShowUnitDescription(&shopPlayer[i]);
 	}
 
 	// player team
 	for (int i = 0; i < 4; i++)
 	{
-		if (triggeredrect(200.0f + 250 * i, 300, 250, 200) && teamPlayer[i].type != 0)
-		{
+		if (triggeredrect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight) && teamPlayer[i].type != 0)
 			select = i + 4;
-		}
 
-		if (MouseHoverRect(200.0f + 250 * i, 300, 250, 200))
+		if (MouseHoverRect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight))
 			ShowUnitDescription(&teamPlayer[i]);
 	}
 
 	/* Release click */
 	// draw sell button
 	if (select >= 4)
-	{
-		drawsellinterface();
-	}
+		DrawSellButton();
 
 	if (CP_Input_MouseReleased(MOUSE_BUTTON_1))
 	{
@@ -86,17 +82,17 @@ void GameUpdate()
 				SellUnit(teamPlayer, teamIdx, &money);
 
 			// swap team unit
-			if (300 <= y && y <= 500)
-				Swap(teamIdx, (int)(x - 200) / 250, 4);
+			if (teamPosY <= y && y <= teamPosY + cardHeight)
+				Swap(teamIdx, (int)((x - teamPosX) / cardWidth), 4);
 		}
 		// shop
 		else
 		{
 			teamIdx = select - 1;
 
-			if (300 <= y && y <= 500)
+			if (teamPosY <= y && y <= teamPosY + cardHeight)
 			{
-				BuyUnit(shopPlayer, teamPlayer, teamIdx, ((int)x - 200) / 250, &money);
+				BuyUnit(shopPlayer, teamPlayer, teamIdx, (int)((x - teamPosX) / cardWidth), &money);
 			}
 		}
 
@@ -104,10 +100,10 @@ void GameUpdate()
 	}
 
 	/* Draw */
-	Drawinterfaces(money, playerLife, stage);
-	drawendturn();
-	drawfreeze();
-	drawrefresh();
+	DrawInterface(money, playerLife, stage);
+	//drawendturn();
+	//drawfreeze();
+	//drawrefresh();
 	drawupgradestore();
 
 	DrawTeam();

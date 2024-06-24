@@ -39,7 +39,7 @@ enum unitlist
 
 struct unit
 {
-	bool visible;
+	//bool visible;
 	double time;
 	double Maxtime;
 	enum unitlist type;
