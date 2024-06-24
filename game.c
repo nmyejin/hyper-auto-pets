@@ -1,6 +1,6 @@
 ﻿#include "game.h"
 
-int money = 100;
+int money = 0;
 int playerLife = 5;
 int stage = 1;
 int shopLevel = 1;

@@ -4,6 +4,7 @@ int moneyEnemy;
 
 int periodUpgradeShopEnemy = FINAL_STAGE / MAX_SHOP_LEVEL;
 int shopLevelEnemy = 0;
+int result = 0;
 
 struct unit teamEnemy[TEAM_SIZE];
 struct unit shopEnemy[SHOP_SIZE];
@@ -11,14 +12,6 @@ struct unit shopEnemy[SHOP_SIZE];
 void SummonTeamEnemy()
 {
 	static int stageBefore = 0;
-
-	//for (int i = 0; i < TEAM_SIZE; i++)
-	//{
-	//	if (teamEnemy[i].type != 0 && teamEnemy[i].visible == false)
-	//		teamEnemy[i].visible = true;
-	//}
-
-	//moneyEnemy = 10;
 
 	if (stageBefore != stage && stage % periodUpgradeShopEnemy == 1)
 		shopLevelEnemy++;
@@ -236,7 +229,6 @@ void InitializeTeam()
 }
 void givemoneystage()
 {
-
 	switch (stage)
 	{
 	case 1:
@@ -465,4 +457,24 @@ CP_Vector IdxMinPower(struct unit* arr, int size)
 	}
 
 	return CP_Vector_Set((float)idx, (float)value);
+}
+
+void ShowResult(int r)
+{
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+	CP_Graphics_DrawRect(30, 30, 1970, 970);
+	CP_Settings_TextSize(30.0f);
+
+	switch (r)
+	{
+	case 0:
+		CP_Font_DrawText("DRAW", 800, 480);
+		break;
+	case 1:
+		CP_Font_DrawText("WIN", 800, 480);
+		break;
+	case 2:
+		CP_Font_DrawText("LOSE", 800, 480);
+		break;
+	}
 }

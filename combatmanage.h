@@ -5,6 +5,9 @@
 #include "game.h"
 #include "combatmanage.h"
 #include "gameover.h"
+#include "Windows.h"
+
+extern int result;
 
 void SummonTeamEnemy();
 void hit();
@@ -24,6 +27,7 @@ void elephantskill();
 void snasnapping_turtleskill();
 void viperskill();
 int checkgameover();
+void ShowResult(int result);
 
 CP_Vector IdxMaxPower(struct unit* arr, int size);
 CP_Vector IdxMinPower(struct unit* arr, int size);

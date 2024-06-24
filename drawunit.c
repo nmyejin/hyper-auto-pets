@@ -41,15 +41,21 @@ void DrawInterface(int howmuchmoney, int howmanylife, int stagewhat)
 
 
 	/* Slot */
-	CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 130));
 
 	// team
-	//CP_Graphics_DrawRect(teamPosX)
+	CP_Settings_NoStroke();
+	CP_Graphics_DrawRect(teamPosX - 10, teamPosY - 20, cardWidth * 4 + 20, cardHeight + 30);
+
+	CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
 	for (int i = 0; i < 4; i++)
 		CP_Graphics_DrawRect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight);
 
 	// shop
+	CP_Settings_NoStroke();
+	CP_Graphics_DrawRect(teamPosX - 10, shopPosY - 20, cardWidth * 4 + 20, cardHeight + 30);
+
+	CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
 	for (int i = 0; i < 3; i++)
 		CP_Graphics_DrawRect(shopPosX + cardWidth * i, shopPosY, cardWidth, cardHeight);
 
@@ -161,35 +167,12 @@ void DrawShop()
 
 		Drawunit(shopPlayer[i - 1], x, y);
 	}
-
-	//for (int i = 1; i < 4; i++)
-	//{
-	//	
-
-
-	//	float x = 200.0f + 250 * (i - 1);
-	//	float y = 600;
-
-	//	if (select == i)
-	//	{
-	//		x = CP_Input_GetMouseX() - 125;
-	//		y = CP_Input_GetMouseY() - 100;
-	//	}
-	//	Drawunit(shopPlayer[i-1], x, y);
-	//}
 }
 
 void DrawTeam()
 {
 	for (int i = 0; i < TEAM_SIZE; i++)
 		Drawunit(teamPlayer[i], teamPosX + cardWidth * i, teamPosY);
-
-	//for (int i = 0; i < TEAM_SIZE; i++)
-	//{
-	//	float x = 200.0f + 250 * (i);
-	//	float y = 300;
-	//	Drawunit(teamPlayer[i], x, y);
-	//}
 }
 
 
@@ -289,48 +272,20 @@ void Drawunittext(float posx, float posy, int type)
 	}
 }
 
-
-
-
-
-
-
-
-
-
-//
-//void drawfreeze()
-//{
-//	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-//	CP_Settings_TextSize(70.0f);
-//	CP_Font_DrawText("Freeze", 1525, 870);
-//}
-//void drawendturn()
-//{
-//	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-//	CP_Settings_TextSize(60.0f);
-//	CP_Font_DrawText("EndTurn", 1750, 880);
-//}
-//void drawrefresh()
-//{
-//	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-//	CP_Settings_TextSize(100.0f);
-//	CP_Font_DrawText("Refresh", 1200, 850);
-//}
 void drawupgradestore()
 {
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-
 	CP_Settings_TextSize(30.0f);
-	char buffer[50];
-	if (shopLevel != MAX_SHOP_LEVEL)
-		sprintf_s(buffer, 50, "shop level: %d\nupgrade cost: %d", shopLevel, costShopUpgrade[shopLevel]);
-	else
-		sprintf_s(buffer, 50, "shop level: %d", shopLevel);
-	CP_Font_DrawText(buffer, 490, 860);
 
-	CP_Settings_TextSize(100.0f);
-	CP_Font_DrawText("Upgrade", 200, 840);
+	char buffer[20];
+	sprintf_s(buffer, 20, "shop level: %d", shopLevel);
+	CP_Font_DrawText(buffer, teamPosX + 40, shopPosY + 20);
+
+	if (shopLevel != MAX_SHOP_LEVEL)
+	{
+		sprintf_s(buffer, 20, "upgrade cost: %d", costShopUpgrade[shopLevel]);
+		CP_Font_DrawText(buffer, teamPosX + 40, shopPosY + 20 + 32);
+	}
 }
 //combat
 void drawunitlife(int life, float unitx, float unity)
@@ -356,31 +311,32 @@ void drawunitatt(int att, float unitx, float unity)
 
 void combat_interface()
 {
+	CP_Settings_Stroke(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 130));
+
+	float enemyPosX = teamPosX + cardWidth * 3;
+
+	for (int i = 0; i < 4; i++)
+	{
+		CP_Graphics_DrawRect(teamPosX + cardWidth * i, teamPosY, cardWidth, cardHeight);
+		CP_Graphics_DrawRect(enemyPosX + cardWidth * i, shopPosY, cardWidth, cardHeight);
+	}/*
+
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_TextSize(20.0f);
 	CP_Font_DrawText("You", 125, 70);
-	CP_Font_DrawText("Enemy", 875, 670);
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-	CP_Graphics_DrawRect(125, 100, 250, 200);
-	CP_Graphics_DrawRect(375, 100, 250, 200);
-	CP_Graphics_DrawRect(625, 100, 250, 200);
-	CP_Graphics_DrawRect(875, 100, 250, 200);
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-	CP_Graphics_DrawRect(875, 700, 250, 200);
-	CP_Graphics_DrawRect(1125, 700, 250, 200);
-	CP_Graphics_DrawRect(1375, 700, 250, 200);
-	CP_Graphics_DrawRect(1625, 700, 250, 200);
+	CP_Font_DrawText("Enemy", 875, 670);*/
 }
 
-void drawfightteam(struct unit* abc, float x, float y, int enemyT)
+void drawfightteam(struct unit* team, float x, float y, int enemyT)
 {
-	const float Amplitude = 200.0f;
+	const float amplitude = 100.0f;	// 나중에 맞추기
 
 	for (int i = 1; i < 3; i++)
 	{
-		float vx = x + 250 * (i);
+		float vx = x + cardWidth * i;
 		float vy = y;
-		Drawunit(abc[i], vx, vy);
+		Drawunit(team[i], vx, vy);
 	}
 
 	for (int i = 0; i < 4; ++i)
@@ -398,22 +354,22 @@ void drawfightteam(struct unit* abc, float x, float y, int enemyT)
 	if (enemyT) //enemy
 	{
 		//Do up down
-		double ratio = abc[0].time / /*abc[0].Maxtime*/1.f;
+		double ratio = team[0].time / /*abc[0].Maxtime*/1.f;
 
-		float vy = (float)sin( ratio * PI ) * Amplitude;
+		float vy = (float)sin( ratio * PI ) * amplitude;
 
-		Drawunit(abc[0], x, y - vy);
-		Drawunit(abc[3], x + 250 * 3, y);
+		Drawunit(team[0], x, y - vy);
+		Drawunit(team[3], x + 250 * 3, y);
 	}
 	else //team
 	{
 		//Do up down
-		double ratio = abc[3].time / /* abc[3].Maxtime*/ 1.f;
+		double ratio = team[3].time / /* abc[3].Maxtime*/ 1.f;
 
-		float vy = (float)sin(ratio * PI) * Amplitude;
+		float vy = (float)sin(ratio * PI) * amplitude;
 
-		Drawunit(abc[3], x + 250 * 3, y + vy);
-		Drawunit(abc[0], x, y);
+		Drawunit(team[3], x + 250 * 3, y + vy);
+		Drawunit(team[0], x, y);
 	}
 }
 
@@ -428,5 +384,20 @@ int checksell()
 
 void ShowUnitDescription(struct unit* unit)
 {
-	CP_Font_DrawText(unit->description, 1300, 200);
+	static char name[20];
+	static char description[150];
+	if (unit->type != 0)
+	{
+		strcpy_s(name, 20, unit->name);
+		strcpy_s(description, 150, unit->description);
+	}
+
+	CP_Settings_NoStroke();
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 180));
+	CP_Graphics_DrawRectAdvanced(lowerBtnPosX, teamPosY, (btnWidth + 10) * 3, cardHeight, 0.f, 30.f);
+
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_TextSize(30.f);
+	CP_Font_DrawTextBox(name, lowerBtnPosX + 20, teamPosY + 10, (btnWidth + 10) * 3 - 40);
+	CP_Font_DrawTextBox(description, lowerBtnPosX + 20, teamPosY + 40, (btnWidth + 10) * 3 - 40);
 }

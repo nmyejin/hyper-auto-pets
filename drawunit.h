@@ -28,9 +28,6 @@ void Drawunittext(float posx, float posy, int type);
 
 void DrawShop();
 void DrawTeam();
-//void drawfreeze();
-//void drawendturn();
-//void drawrefresh();
 void drawupgradestore();
 
 
@@ -39,6 +36,6 @@ void ShowUnitDescription(struct unit* unit);
 //combat
 void drawunitlife(int life, float unitx, float unity);
 void drawunitatt(int att, float unitx, float unity);
-void drawfightteam(struct unit* abc, float x, float y, int enemyT);
+void drawfightteam(struct unit* team, float x, float y, int enemyT);
 void combat_interface(); 
 int checksell();

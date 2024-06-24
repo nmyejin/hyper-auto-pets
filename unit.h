@@ -47,6 +47,7 @@ struct unit
 	int att, life;
 	//char skill;
 	char description[150];
+	char name[20];
 };
 
 void InitializeUnit(struct unit* unit, enum unitlist ul);
