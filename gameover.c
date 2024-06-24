@@ -32,3 +32,5 @@ void gameover_exit(void)
 	CP_Image_Free(&win);
 	CP_Image_Free(&lose);
 }
+
+////////////////////////////////
