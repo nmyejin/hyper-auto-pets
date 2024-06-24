@@ -3,11 +3,14 @@
 //CP_Image heart = NULL;
 //CP_Image att = NULL;
 
+CP_Image backgroundimage3 = NULL;
+
 int fightover = 0;
 double T;
 
 void combat_init(void)
 {
+	backgroundimage3 = CP_Image_Load("./Assets/combat.jpg");
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_TOP);
 	CP_System_SetWindowSize(2000, 1000);
 	CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
@@ -15,12 +18,13 @@ void combat_init(void)
 	SummonTeamEnemy(stage);
 	fillin_emptyslot(fightteam, 0);
 	T = 0;
-	//howmanyturtle();
+	loadimage();
 	//heart = CP_Image_Load("./Assets/heart.ppm");
 	//att = CP_Image_Load("./Assets/att.ppm");
 }
 void combat_update(void)
 {
+	CP_Image_Draw(backgroundimage3, 1000, 500, 2000, 1000, 255);
 	if (T >= 1) {
 		
 		fillin_emptyslot(fightteam, 0);
@@ -38,6 +42,7 @@ void combat_update(void)
 }
 void combat_exit(void)
 {
+	CP_Image_Free(&backgroundimage3);
 	//CP_Image_Free(&heart);
 	//CP_Image_Free(&att);
 }

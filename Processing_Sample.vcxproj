@@ -201,6 +201,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     <ClCompile Include="clickobject.c" />
     <ClCompile Include="combat.c" />
     <ClCompile Include="combatmanage.c" />
+    <ClCompile Include="digipen.c" />
     <ClCompile Include="drawunit.c" />
     <ClCompile Include="game.c" />
     <ClCompile Include="gameover.c" />
@@ -209,12 +210,14 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     <ClCompile Include="shop.c" />
     <ClCompile Include="stage.c" />
     <ClCompile Include="start_screen.c" />
+    <ClCompile Include="team_and_gamelogo.c" />
     <ClCompile Include="unit.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clickobject.h" />
     <ClInclude Include="combat.h" />
     <ClInclude Include="combatmanage.h" />
+    <ClInclude Include="digipen.h" />
     <ClInclude Include="drawunit.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gameover.h" />
@@ -222,6 +225,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     <ClInclude Include="shop.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="start_screen.h" />
+    <ClInclude Include="team_and_gamelogo.h" />
     <ClInclude Include="unit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

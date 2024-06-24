@@ -125,7 +125,7 @@ void CheckHit()
 			turtleskill(&fightteam[3], &teamEnemy[0]);
 			break;
 		case Skunk:
-			skunkskill(&teamPlayer[3], &teamEnemy[0], 1);
+			skunkskill(&fightteam[3], &teamEnemy[0], 1);
 			break;
 		case Owl:
 			owlskill();
@@ -340,7 +340,7 @@ void hawkskill()
 	}
 	if (teamEnemy[0].type == Hawk)
 	{
-		teamPlayer[2].life -= teamEnemy[0].att;
+		fightteam[2].life -= teamEnemy[0].att;
 	}
 }
 
@@ -357,7 +357,7 @@ void elephantskill()
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			teamPlayer[i].life -= 2;
+			fightteam[i].life -= 2;
 		}
 	}
 }

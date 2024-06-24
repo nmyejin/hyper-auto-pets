@@ -1,9 +1,87 @@
 #include "drawunit.h"
 #include "math.h"
+
+CP_Image I_Spider = NULL;
+CP_Image I_Hamster = NULL;
+CP_Image I_Pigeon = NULL;
+CP_Image I_Sparrow = NULL;
+CP_Image I_Frog = NULL;
+CP_Image I_Dog = NULL;
+CP_Image I_Turtle = NULL;
+CP_Image I_Chicken = NULL;
+CP_Image I_Chick = NULL;
+CP_Image I_Cheerleader = NULL;
+CP_Image I_PoisonDartFrog = NULL;
+CP_Image I_Owl = NULL;
+CP_Image I_Pig = NULL;
+CP_Image I_Tiger = NULL;
+CP_Image I_Skunk = NULL;
+CP_Image I_Magpie = NULL;
+CP_Image I_Hawk = NULL;
+CP_Image I_Viper = NULL;
+CP_Image I_Elephant = NULL;
+CP_Image I_SnappingTurtle = NULL;
+CP_Image I_Chameleon = NULL;
+CP_Image Sword = NULL;
+CP_Image Heart = NULL;
+
+void loadimage()
+{
+	Sword = CP_Image_Load("./Assets/Sword.png");
+	Heart = CP_Image_Load("./Assets/Heart.png");
+	I_Spider = CP_Image_Load("./Assets/spider.png");
+	I_Hamster = CP_Image_Load("./Assets/hamster.png");
+	I_Pigeon = CP_Image_Load("./Assets/pigeon.png");
+	I_Sparrow = CP_Image_Load("./Assets/sparrow.png");
+	I_Frog = CP_Image_Load("./Assets/frog.png");
+	I_Dog = CP_Image_Load("./Assets/dog.png");
+	I_Turtle = CP_Image_Load("./Assets/turtle.png");
+	I_Chicken = CP_Image_Load("./Assets/chicken.png");
+	I_Chick = CP_Image_Load("./Assets/chick.png");
+	I_Cheerleader = CP_Image_Load("./Assets/cheerleader.png");
+	I_PoisonDartFrog = CP_Image_Load("./Assets/poisondartfrog.png");
+	I_Owl = CP_Image_Load("./Assets/owl.png");
+	I_Pig = CP_Image_Load("./Assets/pig.png");
+	I_Tiger = CP_Image_Load("./Assets/tiger.png");
+	I_Skunk = CP_Image_Load("./Assets/skunk.png");
+	I_Magpie = CP_Image_Load("./Assets/magpie.png");
+	I_Hawk = CP_Image_Load("./Assets/hawk.png");
+	I_Viper = CP_Image_Load("./Assets/viper.png");
+	I_Elephant = CP_Image_Load("./Assets/elephant.png");
+	I_SnappingTurtle = CP_Image_Load("./Assets/snappingturtle.png");
+	I_Chameleon = CP_Image_Load("./Assets/chameleon.png");
+}
+void Imagefree()
+{
+	CP_Image_Free(&I_Spider);
+	CP_Image_Free(&I_Hamster);
+	CP_Image_Free(&I_Pigeon);
+	CP_Image_Free(&I_Sparrow);
+	CP_Image_Free(&I_Frog);
+	CP_Image_Free(&I_Dog);
+	CP_Image_Free(&I_Turtle);
+	CP_Image_Free(&I_Chicken);
+	CP_Image_Free(&I_Chick);
+	CP_Image_Free(&I_Cheerleader);
+	CP_Image_Free(&I_PoisonDartFrog);
+	CP_Image_Free(&I_Owl);
+	CP_Image_Free(&I_Pig);
+	CP_Image_Free(&I_Tiger);
+	CP_Image_Free(&I_Skunk);
+	CP_Image_Free(&I_Magpie);
+	CP_Image_Free(&I_Hawk);
+	CP_Image_Free(&I_Viper);
+	CP_Image_Free(&I_Elephant);
+	CP_Image_Free(&I_SnappingTurtle);
+	CP_Image_Free(&I_Chameleon);
+	CP_Image_Free(&Heart);
+	CP_Image_Free(&Sword);
+}
+
 void Drawunittext(float posx, float posy, int type)
 {
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Settings_TextSize(100.0f);
+	CP_Settings_TextSize(50.0f);
 
 	switch (type)
 	{
@@ -84,28 +162,32 @@ void Drawmoney(int howmuchmoney)
 }
 void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 {
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 200));
 	CP_Graphics_DrawRect(0, 10, 300, 100); //money
 	Drawmoney(howmuchmoney);
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 200));
 	CP_Graphics_DrawRect(310, 10, 300, 100); //life
 	Drawlife(howmanylife);
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 200));
 	CP_Graphics_DrawRect(620, 10, 300, 100); //stage
 	Drawstage(stage);
 
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 120));
+	CP_Graphics_DrawRect(200, 300, 1000, 200);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
 	CP_Graphics_DrawRect(200, 300, 250, 200); //deckslot1
 	CP_Graphics_DrawRect(450, 300, 250, 200); //deckslot2
 	CP_Graphics_DrawRect(700, 300, 250, 200); //deckslot3
 	CP_Graphics_DrawRect(950, 300, 250, 200); //deckslot1
 
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 120));
+	CP_Graphics_DrawRect(200, 600, 750, 200);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
 	CP_Graphics_DrawRect(200, 600, 250, 200); // storeslot1
 	CP_Graphics_DrawRect(450, 600, 250, 200); // storeslot1
 	CP_Graphics_DrawRect(700, 600, 250, 200); // storeslot1
 
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 200));
 	CP_Graphics_DrawRect( 200, 840, 250, 100); // upgrade store
 	CP_Graphics_DrawRect(1200, 800, 300, 200); // refresh store
 	CP_Graphics_DrawRect(1525, 800, 200, 200); // freeze store
@@ -116,6 +198,7 @@ void Drawinterfaces(int howmuchmoney, int howmanylife, int stagewhat)
 
 void Drawunit(struct unit store_unit, float x, float y)
 {
+	loadimage();
 	if (store_unit.type <= 0
 		|| store_unit.type > Chameleon
 		|| store_unit.visible == 0)
@@ -128,14 +211,89 @@ void Drawunit(struct unit store_unit, float x, float y)
 		CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
 	else if (store_unit.type <= Chameleon)
 		CP_Settings_Fill(CP_Color_Create(120, 120, 120, 255));
+	CP_Graphics_DrawRect(x, y, 250, 275);
 
-	CP_Graphics_DrawRect(x, y, 250, 200);
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Graphics_DrawRect(x + 6, y + 6, 238, 238);
 
-	drawunitlife(store_unit.life, x, y);
-	drawunitatt(store_unit.att, x, y);
+	switch (store_unit.type)
+	{
+	case Spider:
+		CP_Image_Draw(I_Spider, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Hamster:
+		CP_Image_Draw(I_Hamster, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Pigeon:
+		CP_Image_Draw(I_Pigeon, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Sparrow:
+		CP_Image_Draw(I_Sparrow, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Frog:
+		CP_Image_Draw(I_Frog, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Dog:
+		CP_Image_Draw(I_Dog, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Turtle:
+		CP_Image_Draw(I_Turtle, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Chicken:
+		CP_Image_Draw(I_Chicken, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Chick:
+		CP_Image_Draw(I_Chick, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Cheerleader:
+		CP_Image_Draw(I_Cheerleader, x + 125, y + 125, 220, 220, 255);
+		break;
+	case PoisonDartFrog:
+		CP_Image_Draw(I_PoisonDartFrog, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Owl:
+		CP_Image_Draw(I_Owl, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Pig:
+		CP_Image_Draw(I_Pig, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Tiger:
+		CP_Image_Draw(I_Tiger, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Skunk:
+		CP_Image_Draw(I_Skunk, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Magpie:
+		CP_Image_Draw(I_Magpie, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Hawk:
+		CP_Image_Draw(I_Hawk, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Viper:
+		CP_Image_Draw(I_Viper, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Elephant:
+		CP_Image_Draw(I_Elephant, x + 125, y + 125, 220, 220, 255);
+		break;
+	case SnappingTurtle:
+		CP_Image_Draw(I_SnappingTurtle, x + 125, y + 125, 220, 220, 255);
+		break;
+	case Chameleon:
+		CP_Image_Draw(I_Chameleon, x + 125, y + 125, 220, 220, 255);
+		break;
+	}
+
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 170));
+	CP_Graphics_DrawRect(x + 6, y + 190, 238, 50);
+
+	Drawunittext(x + 20, y + 185, store_unit.type);
+	//Image att, life
+	CP_Image_Draw(Sword, x + 25, y + 250, 50, 50, 255);
+	CP_Image_Draw(Heart, x + 225, y + 250, 50, 50, 255);
+
+	drawunitlife(store_unit.life, x, y+45);
+	drawunitatt(store_unit.att, x, y+45);
 	//DrawATT
-
-	Drawunittext(x, y, store_unit.type);
 }
 void Drawlife(int howmanylife)
 {
@@ -220,7 +378,7 @@ void drawunitlife(int life, float unitx, float unity)
 	float y = unity + 180;
 	char buffer[50] = { 0 };
 	sprintf_s(buffer, 50, "%d", life);
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 	CP_Settings_TextSize(50.0f);
 	CP_Font_DrawText(buffer, x, y);
 }
@@ -230,7 +388,7 @@ void drawunitatt(int att, float unitx, float unity)
 	float y = unity + 180;
 	char buffer[50] = { 0 };
 	sprintf_s(buffer, 50, "%d", att);
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 	CP_Settings_TextSize(50.0f);
 	CP_Font_DrawText(buffer, x, y);
 }
@@ -255,7 +413,7 @@ void combat_interface()
 
 void drawfightteam(struct unit* abc, float x, float y, int enemyT)
 {
-	const float Amplitude = 200.0f;
+	const float Amplitude = 167.0f;
 
 	for (int i = 1; i < 3; i++)
 	{
